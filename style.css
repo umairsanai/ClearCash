@@ -1,0 +1,1303 @@
+/* --- 1. Global Reset & Basic Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+body {
+    background-color: #0f172a;
+    background-image: 
+        radial-gradient(at 100% 0%, rgba(0, 180, 219, 0.15) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(0, 131, 176, 0.15) 0px, transparent 50%);
+    color: #e2e8f0;
+    overflow: hidden; /* Prevent body scroll */
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+ul {
+    list-style: none;
+}
+
+/* Hide the spin buttons in WebKit browsers */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* --- 2. Utility Classes --- */
+.hidden {
+    display: none !important; /* Use !important to ensure override */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* --- 3. Main Layout --- */
+.header {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: 4.5rem;
+    display: flex;
+    justify-content: center;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid rgba(0, 180, 219, 0.2);
+}
+
+.header-nav {
+    width: 100%;
+    max-width: 1100px;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Style for icon logo */
+.header-logo #logo {
+    font-size: 1.75rem;
+    color: #00b4db;
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0, 180, 219, 0.2));
+}
+
+.header-logo h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #e2e8f0, #94a3b8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 10px rgba(226, 232, 240, 0.2);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.header-actions button {
+    color: #64748b;
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.header-actions button:hover {
+    color: #00b4db;
+    background: rgba(0, 180, 219, 0.1);
+    transform: translateY(-1px);
+}
+
+.app-container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 4rem); /* Full height minus header */
+}
+
+#main-app-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    transition: width 0.3s ease-in-out;
+}
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.greeting-bar {
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.greeting-bar h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #e2e8f0 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.greeting-bar button {
+    color: #94a3b8;
+    font-size: 1.5rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    background: rgba(30, 41, 59, 0.7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+}
+
+.greeting-bar button:hover {
+    color: #00b4db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 180, 219, 0.15);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+/* --- 4. Card Styles --- */
+.card {
+    background: rgba(30, 41, 59, 0.7);
+    padding: 1.75rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    transition: all 0.3s ease;
+    color: #e2e8f0;
+}
+
+.card-col-span-2 {
+    grid-column: span 2 / span 2;
+}
+
+.card-col-span-3 {
+    grid-column: span 3 / span 3;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.card-title {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+/* --- 5. Component Styles --- */
+
+/* Balance Card */
+.balance-card {
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0, 180, 219, 0.2);
+    text-align: center;
+    z-index: 1;
+}
+
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.balance-card p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.balance-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1rem 0;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.balance-display h2 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.9));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
+    text-align: center;
+}
+
+.balance-display button {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.balance-display button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.balance-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.balance-actions button {
+    width: auto;
+    min-width: 140px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.balance-actions button:first-child { /* Add Funds */
+    background: rgba(255, 255, 255, 0.95);
+    color: #0083b0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.balance-actions button:first-child:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+}
+
+.balance-actions button:last-child { /* Send */
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.balance-actions button:last-child:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+
+/* Pockets Card */
+.pocket-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+.pocket-card {
+    padding: 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.pocket-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px -3px rgba(0, 180, 219, 0.25);
+    border-color: rgba(0, 180, 219, 0.3);
+    background: rgba(30, 41, 59, 0.8);
+}
+.pocket-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+.pocket-card-balance {
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-top: 0.5rem;
+}
+.progress-bar-container {
+    width: 100%;
+    background-color: rgba(30, 41, 59, 0.7);
+    border-radius: 9999px;
+    height: 0.65rem;
+    margin: 0.5rem 0;
+    border: 1px solid rgba(0, 180, 219, 0.4);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+.progress-bar {
+    height: 100%;
+    border-radius: 9999px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+}
+.pocket-card-info {
+    font-size: 0.75rem; /* 12px */
+    color: #94a3b8;
+}
+.pocket-card-action {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+.pocket-card-action:hover {
+    text-decoration: underline;
+}
+
+/* --- NEW: Pocket Theme Styles --- */
+
+/* Main Pocket (Default) */
+.pocket-main { border-color: rgba(71, 85, 105, 0.3); }
+.pocket-main:hover { border-color: rgba(71, 85, 105, 0.4); }
+.pocket-main .pocket-card-header { color: #e2e8f0; }
+.pocket-main .pocket-card-action { color: #60a5fa; }
+
+/* Theme 1: Green */
+.pocket-theme-green { border-color: rgba(34, 197, 94, 0.3); }
+.pocket-theme-green:hover { border-color: rgba(34, 197, 94, 0.4); }
+.pocket-theme-green .pocket-card-header, .spending-theme-green .spending-item-category, .spending-theme-green .spending-item-amount { color: #4ade80; }
+.pocket-theme-green .progress-bar, .spending-theme-green .progress-bar { background-color: #22c55e; }
+.pocket-theme-green .pocket-card-action { color: #4ade80; }
+.icon-green { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+/* Theme 2: Yellow */
+.pocket-theme-yellow { border-color: rgba(234, 179, 8, 0.3); }
+.pocket-theme-yellow:hover { border-color: rgba(234, 179, 8, 0.4); }
+.pocket-theme-yellow .pocket-card-header, .spending-theme-yellow .spending-item-category, .spending-theme-yellow .spending-item-amount { color: #facc15; }
+.pocket-theme-yellow .progress-bar, .spending-theme-yellow .progress-bar { background-color: #eab308; }
+.pocket-theme-yellow .pocket-card-action { color: #facc15; }
+.icon-yellow { background-color: rgba(234, 179, 8, 0.2); color: #facc15; }
+
+/* Theme 3: Blue */
+.pocket-theme-blue { border-color: rgba(59, 130, 246, 0.3); }
+.pocket-theme-blue:hover { border-color: rgba(59, 130, 246, 0.4); }
+.pocket-theme-blue .pocket-card-header, .spending-theme-blue .spending-item-category, .spending-theme-blue .spending-item-amount { color: #60a5fa; }
+.pocket-theme-blue .progress-bar, .spending-theme-blue .progress-bar { background-color: #3b82f6; }
+.pocket-theme-blue .pocket-card-action { color: #60a5fa; }
+.icon-blue { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+
+/* Theme 4: Red */
+.pocket-theme-red { border-color: rgba(239, 68, 68, 0.3); }
+.pocket-theme-red:hover { border-color: rgba(239, 68, 68, 0.4); }
+.pocket-theme-red .pocket-card-header, .spending-theme-red .spending-item-category, .spending-theme-red .spending-item-amount { color: #f87171; }
+.pocket-theme-red .progress-bar, .spending-theme-red .progress-bar { background-color: #ef4444; }
+.pocket-theme-red .pocket-card-action { color: #f87171; }
+.icon-red { background-color: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+/* Theme 5: Purple */
+.pocket-theme-purple { border-color: rgba(139, 92, 246, 0.3); }
+.pocket-theme-purple:hover { border-color: rgba(139, 92, 246, 0.4); }
+.pocket-theme-purple .pocket-card-header, .spending-theme-purple .spending-item-category, .spending-theme-purple .spending-item-amount { color: #a78bfa; }
+.pocket-theme-purple .progress-bar, .spending-theme-purple .progress-bar { background-color: #8b5cf6; }
+.pocket-theme-purple .pocket-card-action { color: #a78bfa; }
+.icon-purple { background-color: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+
+/* Theme 6: Orange */
+.pocket-theme-orange { border-color: rgba(249, 115, 22, 0.3); }
+.pocket-theme-orange:hover { border-color: rgba(249, 115, 22, 0.4); }
+.pocket-theme-orange .pocket-card-header, .spending-theme-orange .spending-item-category, .spending-theme-orange .spending-item-amount { color: #fb923c; }
+.pocket-theme-orange .progress-bar, .spending-theme-orange .progress-bar { background-color: #f97316; }
+.pocket-theme-orange .pocket-card-action { color: #fb923c; }
+.icon-orange { background-color: rgba(249, 115, 22, 0.2); color: #fb923c; }
+
+/* --- End Pocket Themes --- */
+
+
+.add-pocket-btn {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: rgba(0, 180, 219, 0.1);
+    color: #00b4db;
+    border-radius: 1rem;
+    border: 2px dashed rgba(0, 180, 219, 0.4);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(8px);
+}
+
+.add-pocket-btn i {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.add-pocket-btn:hover {
+    background: rgba(0, 180, 219, 0.2);
+    border: 2px dashed rgba(0, 180, 219, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px -3px rgba(0, 180, 219, 0.2);
+}
+
+.add-pocket-btn:hover i {
+    transform: rotate(90deg);
+}
+
+/* "This Week" Card */
+.spending-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.spending-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+.spending-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+.spending-nav button {
+    background: rgba(30, 41, 59, 0.7);
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+}
+.spending-nav button:hover {
+    background: rgba(30, 41, 59, 0.8);
+    color: #00b4db;
+}
+.spending-nav span {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #e2e8f0;
+    width: 7rem;
+    text-align: center;
+}
+.spending-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.spending-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+.spending-item-category {
+    font-weight: 500;
+    color: #374151;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.spending-item-category .fa-utensils { color: #22c55e; }
+.spending-item-category .fa-tshirt { color: #eab308; }
+.spending-item-amount {
+    color: #4b5563;
+}
+.spending-list .progress-bar-container { height: 0.625rem; /* 10px */ }
+
+.no-spendings-message {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 2rem;
+    background: rgba(30, 41, 59, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    color: #94a3b8;
+    backdrop-filter: blur(8px);
+}
+
+/* Transactions Card */
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.transaction-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(30, 41, 59, 0.7);
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+}
+
+.transaction-item:hover {
+    transform: translateY(-2px);
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(0, 180, 219, 0.3);
+    box-shadow: 0 4px 15px -3px rgba(0, 180, 219, 0.25);
+}
+.transaction-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.transaction-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+}
+.transaction-icon.icon-food { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.transaction-icon.icon-deposit { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.transaction-icon.icon-laundry { background-color: rgba(234, 179, 8, 0.2); color: #facc15; }
+.transaction-icon.icon-transfer { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.transaction-icon.icon-savings { background-color: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.transaction-icon.icon-main { background-color: rgba(71, 85, 105, 0.2); color: #94a3b8; }
+
+
+.transaction-info .title {
+    font-weight: 500;
+    color: #e2e8f0;
+}
+.transaction-info .subtitle {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+.transaction-amount {
+    font-weight: 600;
+}
+.amount-debit { color: #f87171; }
+.amount-credit { color: #4ade80; }
+
+.view-all-btn {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 1rem;
+    background: rgba(0, 180, 219, 0.1);
+    color: #00b4db;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border: 2px dashed rgba(0, 180, 219, 0.4);
+    backdrop-filter: blur(8px);
+}
+
+.view-all-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.view-all-btn:hover {
+    background: rgba(0, 180, 219, 0.2);
+    border: 2px dashed rgba(0, 180, 219, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px -3px rgba(0, 180, 219, 0.2);
+}
+
+.view-all-btn:hover::before {
+    left: 100%;
+}
+
+.app-footer {
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+.app-footer p {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* --- 6. Calculator Panel --- */
+#calculator-panel {
+    width: 0;
+    opacity: 0;
+    height: 100%;
+    overflow-y: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.calculator-content {
+    width: 384px; /* w-96 */
+    height: 100%;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.95);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+    border-left: 1px solid rgba(0, 180, 219, 0.2);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+}
+
+.calculator-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+    height: 2rem; /* 32px */
+}
+.calculator-header button {
+    color: #94a3b8;
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+}
+.calculator-header button:hover {
+    color: #00b4db;
+    transform: rotate(90deg);
+}
+
+.calculator-display {
+    background: rgba(30, 41, 59, 0.95);
+    color: #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: right;
+    font-size: 3rem; /* 48px */
+    font-family: monospace;
+    height: 6rem; /* 96px */
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    overflow-x: auto;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+}
+
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+.calculator-grid button {
+    height: 4rem; /* 64px */
+    border-radius: 0.5rem;
+    font-size: 1.5rem; /* 24px */
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.calculator-grid .btn-num {
+    background: rgba(30, 41, 59, 0.7);
+    color: #e2e8f0;
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    transition: all 0.3s ease;
+}
+.calculator-grid .btn-num:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(0, 180, 219, 0.3);
+    transform: translateY(-1px);
+}
+.calculator-grid .btn-op {
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    color: #ffffff;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px -2px rgba(0, 180, 219, 0.3);
+}
+.calculator-grid .btn-op:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px -2px rgba(0, 180, 219, 0.4);
+}
+.calculator-grid .btn-util {
+    background: rgba(71, 85, 105, 0.7);
+    color: #e2e8f0;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    transition: all 0.3s ease;
+}
+.calculator-grid .btn-util:hover {
+    background: rgba(71, 85, 105, 0.8);
+    border-color: rgba(148, 163, 184, 0.3);
+    transform: translateY(-1px);
+}
+.calculator-grid .col-span-2 {
+    grid-column: span 3 / span 3; /* UPDATED: Was span 3, fixed to span 2 */
+}
+
+/* --- 7. Notifications Panel --- */
+#notifications-panel {
+    position: absolute;
+    top: 4rem; /* 64px */
+    right: 1rem;
+    width: 320px;
+    max-width: 90vw;
+    background: rgba(30, 41, 59, 0.95);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 50;
+}
+.notifications-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 180, 219, 0.2);
+}
+.notifications-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+.notifications-header button {
+    color: #94a3b8;
+    font-size: 1.5rem;
+}
+.notifications-header button:hover {
+    color: #00b4db;
+}
+.notifications-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 180, 219, 0.1);
+    transition: all 0.3s ease;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item:hover {
+    background: rgba(30, 41, 59, 0.8);
+}
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+}
+.notification-icon.icon-success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+.notification-icon.icon-warning {
+    background-color: #fefce8;
+    color: #a16207;
+}
+.notification-content p {
+    font-size: 0.875rem;
+    color: #e2e8f0;
+}
+.notification-content .notification-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+}
+.notifications-footer {
+    padding: 0.75rem;
+    background: rgba(30, 41, 59, 0.8);
+    text-align: center;
+    border-top: 1px solid rgba(0, 180, 219, 0.2);
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+.notifications-footer button {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #00b4db;
+}
+.notifications-footer button:hover {
+    text-decoration: underline;
+    color: #60a5fa;
+}
+
+/* --- 8. Modal Styles (Shared) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* JS will control 'display: flex' vs 'display: none' */
+}
+.modal-content {
+    background: rgba(30, 41, 59, 0.95);
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 24rem; /* 384px */
+    margin: 1rem;
+    /* JS can animate this */
+    transform: translateY(0);
+    opacity: 1;
+    transition: all 0.3s ease-out;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 180, 219, 0.2);
+}
+.modal-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #e2e8f0;
+}
+.modal-close-btn {
+    font-size: 1.5rem;
+    color: #94a3b8;
+    transition: all 0.3s ease;
+}
+.modal-close-btn:hover {
+    color: #00b4db;
+    transform: rotate(90deg);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+/* --- 9. Form Styles (Used in Modals) --- */
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #e2e8f0;
+    margin-bottom: 0.25rem;
+}
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(0, 180, 219, 0.3);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: rgba(15, 23, 42, 0.6);
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+}
+.form-input:focus {
+    outline: none;
+    border-color: #00b4db;
+    background: rgba(15, 23, 42, 0.8);
+    box-shadow: 0 0 0 2px rgba(0, 180, 219, 0.2);
+}
+
+/* Handle Webkit autofill */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e2e8f0;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(15, 23, 42, 0.8) inset;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: #e2e8f0;
+}
+
+/* Handle Firefox autofill */
+.form-input:autofill,
+.form-input:autofill:hover,
+.form-input:autofill:focus {
+    background: rgba(15, 23, 42, 0.8) !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 0 0px 1000px rgba(15, 23, 42, 0.8) inset;
+    -webkit-text-fill-color: #e2e8f0;
+}
+/* Disabled input style */
+.form-input:disabled {
+    background: rgba(15, 23, 42, 0.4);
+    color: #94a3b8;
+    border-color: rgba(0, 180, 219, 0.1);
+    cursor: not-allowed;
+}
+
+
+.select-wrapper {
+    position: relative;
+}
+.select-wrapper select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-left: 2.5rem; /* Make space for icon */
+}
+.select-wrapper .select-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00b4db;
+    pointer-events: none;
+}
+.select-wrapper::after { /* Custom arrow */
+    content: '\f078';
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00b4db;
+    pointer-events: none;
+}
+
+/* --- 10. Send Money Modal Styles --- */
+
+/* Step 1: Search */
+#send-money-step-1 {
+    /* display: flex; /* This is to ensure it shows */
+    flex-direction: column;
+    padding: 1.5rem;
+}
+.search-input-container {
+    position: relative;
+    margin-bottom: 1rem;
+}
+.search-input-container input {
+    padding-left: 2.5rem;
+}
+.search-input-container i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.recent-contacts h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #4b5563;
+    margin-bottom: 0.75rem;
+}
+.recent-contacts ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.contact-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.contact-item:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(0, 180, 219, 0.3);
+    transform: translateY(-1px);
+}
+.contact-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.contact-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 9999px;
+}
+/* NEW: Generic Contact Icon */
+.contact-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: #e5e7eb; /* gray-200 */
+    color: #4b5563; /* gray-600 */
+    font-size: 1.25rem; /* 20px */
+}
+
+.contact-info .name {
+    font-weight: 500;
+    color: #e2e8f0;
+}
+.contact-info .handle {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+.contact-item i {
+    color: #00b4db;
+}
+
+/* Step 2: Dialpad */
+#send-money-step-2 {
+    padding: 1.5rem;
+}
+.recipient-info {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.recipient-info p:first-child {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+.recipient-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+.recipient-display .contact-icon { /* Re-use contact icon style */
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+}
+.recipient-display p {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.amount-display {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.amount-display input {
+    font-size: 3.75rem;
+    font-weight: 700;
+    width: 100%;
+    text-align: center;
+    border: none;
+    background: none;
+    padding: 0;
+    color: #e2e8f0;
+}
+.amount-display input:focus {
+    outline: none;
+}
+.amount-display p {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+.dialpad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+.dialpad-grid button {
+    height: 4rem;
+    font-size: 1.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    color: #e2e8f0;
+    transition: all 0.3s ease;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(0, 180, 219, 0.2);
+}
+.dialpad-grid button:hover {
+    background: rgba(30, 41, 59, 0.8);
+    border-color: rgba(0, 180, 219, 0.3);
+    transform: translateY(-1px);
+}
+
+.confirm-send-btn, .confirm-credentials-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1.5rem;
+    background: linear-gradient(135deg, #00b4db, #0083b0);
+    color: #ffffff;
+    border-radius: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px -3px rgba(0, 180, 219, 0.2);
+}
+.confirm-send-btn:hover, .confirm-credentials-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -3px rgba(0, 180, 219, 0.3);
+    filter: brightness(1.1);
+}
+
+
+/* --- 11. Transfer Funds Modal (NEW) --- */
+.transfer-arrow-icon {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #9ca3af;
+    margin: -0.5rem 0;
+}
+
+/* --- 12. Manage Pocket Modal --- */
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+.btn-primary, .btn-danger {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: #3b82f6; /* blue-600 */
+    color: #ffffff;
+    flex-grow: 1; /* Make button take available space */
+    justify-content: center;
+}
+.btn-primary:hover {
+    background-color: #2563eb; /* blue-700 */
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: #ef4444; /* red-500 */
+}
+.btn-danger:hover {
+    background-color: #fef2f2; /* red-50 */
+    color: #dc2626; /* red-600 */
+}
+
+
+/* --- 13. Responsive Design --- */
+@media (max-width: 1024px) {
+    /* On tablets, stack the main balance and roundup cards */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .card-col-span-2 {
+        grid-column: span 1 / span 1;
+    }
+    .card-col-span-3 {
+        grid-column: span 1 / span 1;
+    }
+    .pocket-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    /* On mobile, stack everything */
+    .pocket-grid {
+        grid-template-columns: 1fr;
+    }
+    .spending-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .spending-nav {
+        margin-top: 0.5rem;
+    }
+}

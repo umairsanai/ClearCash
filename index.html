@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearCash - Digital Wallet</title>
+    
+    <script defer type="module" src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body class="bg-gray-100 font-sans overflow-hidden">
+
+    <!-- Header - Fixed Height -->
+    <header class="header">
+        <nav class="header-nav">
+            <div class="header-logo">
+                <button id="logo">
+                    <i class="fas fa-wallet"></i>
+                </button>
+                <!-- <img src="logo.jpg" alt="SpendWise Logo"> -->
+                <h1 id="app-name">ClearCash</h1>
+            </div>
+            <div class="header-actions">
+                <button id="notifications-btn" aria-label="Notifications">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button id="profile-btn" aria-label="Profile">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 
+      ================================================================
+      START: NOTIFICATIONS PANEL (Commented out as requested)
+      ================================================================
+    -->
+    <div id="notifications-panel" class="hidden">
+        <div class="notifications-header">
+            <h3>Notifications</h3>
+            <button id="close-notifications-btn">&times;</button>
+        </div>
+        <ul class="notifications-list no-scrollbar" id="notifications-list-container">
+            <li class="notification-item">
+                <div class="notification-icon icon-success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="notification-content">
+                    <p>Your deposit of <strong>Rs 50,000.00</strong> was successful.</p>
+                    <div class="notification-time">5 minutes ago</div>
+                </div>
+            </li>
+            <li class="notification-item">
+                <div class="notification-icon icon-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="notification-content">
+                    <p>Your <strong>"Food"</strong> pocket is running low (under 10%).</p>
+                    <div class="notification-time">1 hour ago</div>
+                </div>
+            </li>
+        </ul>
+        <div class="notifications-footer">
+            <button>Mark all as read</button>
+        </div>
+    </div>
+
+    <!-- 
+      ================================================================
+      END: NOTIFICATIONS PANEL
+      ================================================================
+    -->
+
+
+    <!-- Main App/Calculator Container -->
+    <div class="app-container">
+
+        <!-- 1. Main Scrollable App Content -->
+        <div id="main-app-wrapper" class="no-scrollbar">
+            <div class="main-content">
+                
+                <div class="greeting-bar">
+                    <h2 id="user-greeting">Good morning, User!</h2>
+                    <button id="calculator-toggle-btn" aria-label="Open Calculator">
+                        <i class="fas fa-calculator"></i>
+                    </button>
+                </div>
+
+                <main class="dashboard-grid">
+
+                    <!-- Card 1: Total Balance (UPDATED to span 3 columns) -->
+                    <div class="card card-col-span-3 balance-card">
+                        <p>Total Balance</p>
+                        <div class="balance-display">
+                            <h2 id="total-balance">********</h2>
+                            <button id="toggle-balance-btn" aria-label="Toggle balance visibility">
+                                <i class="fas fa-eye" id="balance-eye-icon"></i>
+                            </button>
+                        </div>
+                        <div class="balance-actions">
+                            <button id="add-funds-btn"><i class="fas fa-plus-circle"></i>Add Funds</button>
+                            <button id="send-money-btn"><i class="fas fa-paper-plane"></i> Send</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Round Up Savings (REMOVED) -->
+                    
+                    <!-- Card 3: My Pockets -->
+                    <div class="card card-col-span-3 card-hover">
+                        <h3 class="card-title">My Pockets</h3>
+                        <div class="pocket-grid" id="pocket-grid-container">
+                            <!-- Pockets will be dynamically inserted here by script.js -->
+                        </div>
+                        <button id="add-pocket-btn" class="add-pocket-btn">
+                            <i class="fas fa-plus"></i> Add New Pocket
+                        </button>
+                    </div>
+
+                    <!-- Card 4: This Week -->
+                    <div class="card card-col-span-3 card-hover">
+                        <div class="spending-header">
+                            <h3 class="spending-title">This Week</h3>
+                            <div class="spending-nav">
+                                <button id="prev-week-btn" aria-label="Previous week">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span id="week-range-label">Dec 4 - Dec 10</span>
+                                <button id="next-week-btn" aria-label="Next week">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="spending-list" id="spending-list-container">
+                            <!-- Example spending items (can be cleared by JS) -->
+                            <div>
+                                <div class="spending-item-header">
+                                    <span class="spending-item-category"><i class="fas fa-utensils"></i>Food</span>
+                                    <span class="spending-item-amount">Rs 3,500</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: 45%; background-color: #22c55e;"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="spending-item-header">
+                                    <span class="spending-item-category"><i class="fas fa-tshirt"></i>Laundry</span>
+                                    <span class="spending-item-amount">Rs 700</span>
+                                </div>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" style="width: 9%; background-color: #eab308;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 5: Recent Transactions -->
+                    <div class="transactions card card-col-span-3 card-hover">
+                        <h3 class="card-title">Recent Transactions</h3>
+                        <div class="transaction-list" id="transaction-list-container">
+                            
+                            <!-- Transactions will be dynamically inserted here by script.js -->
+                            <!-- <div class="transaction-item">
+                                <div class="transaction-details">
+                                    <div class="transaction-icon icon-food">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="transaction-info">
+                                        <p class="title">Foodpanda Order</p>
+                                        <p class="subtitle">Food Pocket • Dec 9</p>
+                                    </div>
+                                </div>
+                                <p class="transaction-amount amount-debit">- Rs 850.00</p>
+                            </div> -->
+
+                        </div>
+                        <button id="view-all-btn" data-state="view" class="view-all-btn">
+                            View All Transactions
+                        </button>
+                    </div>
+
+                </main>
+            
+                <!-- Footer -->
+                <footer class="app-footer">
+                    <p>© 2025 ClearCash. All rights reserved.</p>
+                </footer>
+            </div>
+        </div>
+
+        <!-- 2. Calculator Panel (Hidden by default) -->
+        <div id="calculator-panel" class="no-scrollbar">
+            <div class="calculator-content"> 
+                <div class="calculator-header">
+                    <button id="close-calculator-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="calculator-display no-scrollbar">
+                    0
+                </div>
+
+                <!-- UPDATED: Calculator Grid Layout -->
+                <div class="calculator-grid">
+                    <button class="backspace btn-util"><i class="fas fa-backspace"></i></button>
+                    <button class="all-clear btn-util">AC</button>
+                    <button data-value="%" class="expression btn-util">%</button>
+                    <button data-value="/" class="expression btn-op">÷</button>
+                    
+                    <button data-value="7" class="expression btn-num">7</button>
+                    <button data-value="8" class="expression btn-num">8</button>
+                    <button data-value="9" class="expression btn-num">9</button>
+                    <button data-value="*" class="expression btn-op">x</button>
+                    
+                    <button data-value="4" class="expression btn-num">4</button>
+                    <button data-value="5" class="expression btn-num">5</button>
+                    <button data-value="6" class="expression btn-num">6</button>
+                    <button data-value="-" class="expression btn-op">-</button>
+                    
+                    <button data-value="1" class="expression btn-num">1</button>
+                    <button data-value="2" class="expression btn-num">2</button>
+                    <button data-value="3" class="expression btn-num">3</button>
+                    <button data-value="+" class="expression btn-op">+</button>
+                    
+                    <button data-value="0" class="expression btn-num col-span-2">0</button>
+                    <button class="equate btn-op">=</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    
+    <!-- 
+      ================================================================
+      START: SEND MONEY MODAL (External)
+      ================================================================
+    -->
+    <div id="send-money-modal" class="modal-overlay hidden">
+        
+        <div class="modal-content" id="send-money-modal-content">
+            
+            <div class="modal-header">
+                <h3 id="send-money-title">Send Money</h3>
+                <button id="send-money-close-btn" class="modal-close-btn">&times;</button>
+            </div>
+            
+            <!-- Modal Body: Step 1 (Search) -->
+            <div id="send-money-step-1">
+                
+                <div class="form-group">
+                    <label for="send-from-pocket">Send From</label>
+                    <div class="select-wrapper">
+                        <i class="fas fa-wallet select-icon"></i>
+                        <select id="send-from-pocket" class="form-input">
+                            <!-- Options will be dynamically populated by script.js -->
+                        </select>
+                    </div>
+                </div>
+
+                <div class="search-input-container">
+                    <input type="text" id="recipient-input" class="form-input" placeholder="Phone, @username, or ClearCash ID">
+                    <i class="fas fa-search"></i>
+                </div>
+                
+                <div class="recent-contacts">
+                    <h4>Recent</h4>
+                    <ul>
+                        <li class="contact-item">
+                            <div class="contact-info">
+                                <!-- Placeholder icon -->
+                                <div class="contact-icon">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="name">Ahmad Suleman</p>
+                                    <p class="handle">@ahmad</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </li>
+                        <li class="contact-item">
+                            <div class="contact-info">
+                                <!-- Placeholder icon -->
+                                <div class="contact-icon" style="background-color: #fef2f2; color: #b91c1c;">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="name">Fatima Khan</p>
+                                    <p classs="handle">0300-1234567</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </li>
+                    </ul>
+                </div>
+                <button id="confirm-credentials-btn" class="confirm-credentials-btn">Confirm</button>
+            </div>
+            
+            <!-- Modal Body: Step 2 (Amount & Dialpad) - HIDDEN BY DEFAULT -->
+            <div id="send-money-step-2" class="hidden">
+                <div class="recipient-info">
+                    <p>Sending to</p>
+                    <div class="recipient-display">
+                        <div class="contact-icon" id="dialpad-recipient-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <p id="recipient-name-display">Ahmad Suleman</p>
+                    </div>
+                </div>
+                
+                <div class="amount-display">
+                    <input type="text" id="amount-input" readonly value="0" placeholder="0">
+                    <p>Rs</p>
+                </div>
+
+                <div class="dialpad-grid">
+                    <button class="dialpad-num" data-value="1">1</button>
+                    <button class="dialpad-num" data-value="2">2</button>
+                    <button class="dialpad-num" data-value="3">3</button>
+                    <button class="dialpad-num" data-value="4">4</button>
+                    <button class="dialpad-num" data-value="5">5</button>
+                    <button class="dialpad-num" data-value="6">6</button>
+                    <button class="dialpad-num" data-value="7">7</button>
+                    <button class="dialpad-num" data-value="8">8</button>
+                    <button class="dialpad-num" data-value="9">9</button>
+                    <div></div>
+                    <button class="dialpad-num" data-value="0">0</button>
+                    <button class="dialpad-back"><i class="fas fa-backspace"></i></button>
+                </div>
+                
+                <button id="confirm-send-btn" class="confirm-send-btn">
+                    Send
+                </button>
+            </div>
+
+        </div>
+        
+    </div>
+    <!-- 
+      ================================================================
+      END: SEND MONEY MODAL
+      ================================================================
+    -->
+
+
+    <!-- 
+      ================================================================
+      START: TRANSFER FUNDS MODAL (Internal)
+      ================================================================
+    -->
+    <div id="transfer-funds-modal" class="modal-overlay hidden">
+        <div class="modal-content" id="transfer-funds-modal-content">
+            
+            <div class="modal-header">
+                <h3 id="transfer-funds-title">Transfer Funds</h3>
+                <button id="close-transfer-modal-btn" class="modal-close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="transfer-funds-form">
+                    
+                    <div class="form-group">
+                        <label for="transfer-from-pocket">From</label>
+                        <input type="text" id="transfer-from-pocket" class="form-input" value="Main Pocket" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="transfer-to-pocket">To</label>
+                        <div class="select-wrapper">
+                            <i class="fas fa-tag select-icon"></i>
+                            <select id="transfer-to-pocket" class="form-input"></select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transfer-amount-input">Amount (Rs)</label>
+                        <input type="number" id="transfer-amount-input" class="form-input" placeholder="10,000" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="confirm-transfer-btn" class="btn-primary" style="width: 100%;">
+                            Confirm Transfer
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!-- 
+      ================================================================
+      END: TRANSFER FUNDS MODAL
+      ================================================================
+    -->
+
+
+    <!-- 
+      ================================================================
+      START: MANAGE POCKET MODAL (Edit)
+      ================================================================
+    -->
+    <div id="manage-pocket-modal" class="modal-overlay hidden">
+        <div class="modal-content" id="manage-pocket-modal-content">
+            
+            <div class="modal-header">
+                <h3 id="manage-pocket-title">Manage Pocket</h3>
+                <button id="close-manage-modal-btn" class="modal-close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="manage-pocket-form">
+                    
+                    <div class="form-group">
+                        <label for="pocket-name-input">Pocket Name</label>
+                        <input type="text" id="pocket-name-input" class="form-input" value="Food" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pocket-budget-input">Total Budget (Rs)</label>
+                        <input type="number" id="pocket-budget-input" class="form-input" value="10000" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="delete-pocket-btn" class="btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete Pocket
+                        </button>
+                        <button type="submit" id="save-pocket-btn" class="btn-primary">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!-- 
+      ================================================================
+      END: MANAGE POCKET MODAL
+      ================================================================
+    -->
+
+    <!-- 
+      ================================================================
+      START: ADD POCKET MODAL (NEW & HIDDEN)
+      ================================================================
+    -->
+    <div id="add-pocket-modal" class="modal-overlay hidden">
+        <div class="modal-content" id="add-pocket-modal-content">
+            
+            <div class="modal-header">
+                <h3 id="add-pocket-title">Add New Pocket</h3>
+                <button id="close-add-modal-btn" class="modal-close-btn">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="add-pocket-form">
+                    
+                    <div class="form-group">
+                        <label for="new-pocket-name-input">Pocket Name</label>
+                        <input type="text" id="new-pocket-name-input" class="form-input" placeholder="e.g., Groceries" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-pocket-budget-input">Total Budget (Rs)</label>
+                        <input type="number" id="new-pocket-budget-input" class="form-input" placeholder="e.g., 5000" required>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="create-pocket-btn" class="btn-primary" style="width: 100%;">
+                            Create Pocket
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <!-- 
+      ================================================================
+      END: ADD POCKET MODAL
+      ================================================================
+    -->
+
+
+</body>
+</html>
+
