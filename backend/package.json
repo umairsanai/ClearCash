@@ -1,0 +1,28 @@
+{
+  "name": "clearcash-backend",
+  "version": "1.0.0",
+  "description": "backend of the clearcash app.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "set MODE=dev && nodemon index.js",
+    "prod": "set MODE=prod && nodemon index.js"
+  },
+  "author": "Umair Anwar",
+  "license": "ISC",
+  "dependencies": {
+    "argon2": "^0.44.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.4.1",
+    "express-xss-sanitizer": "^2.0.2",
+    "helmet": "^8.1.0",
+    "hpp-clean": "^1.0.4",
+    "jsonwebtoken": "^9.0.3",
+    "morgan": "^1.10.1",
+    "nodemon": "^3.1.14",
+    "pg": "^8.20.0"
+  }
+}

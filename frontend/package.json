@@ -1,0 +1,11 @@
+{
+  "name": "clearcash-frontend",
+  "version": "1.0.0",
+  "description": "front-end of the clearcash app.",
+  "main": "script.js",
+  "scripts": {
+    "dev": "py -m http.server 5500"
+  },
+  "author": "Umair Anwar",
+  "license": "ISC"
+}
