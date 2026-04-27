@@ -25,7 +25,6 @@ CREATE TABLE transactions (
     sender_user_id INT NOT NULL REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
     recipient_user_id INT NOT NULL REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
     sender_pocket_id INT NOT NULL REFERENCES pockets(pocket_id) ON UPDATE CASCADE ON DELETE CASCADE,
-    recipient_pocket_id INT NOT NULL REFERENCES pockets(pocket_id) ON UPDATE CASCADE ON DELETE CASCADE,
     amount INT NOT NULL CHECK(amount >= 0),
     transaction_date DATE NOT NULL DEFAULT CURRENT_DATE
 );

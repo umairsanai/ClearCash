@@ -28,8 +28,11 @@ function sendProductionError(error, res) {
             message: error.message
         });
     } else {
-        if (false) {
-
+        if (error.code === "23505" && error.table === "users" && error.constraint === "users_username_key") {
+            res.status(400).json({
+                status: "fail",
+                message: "This username already exists. Please choose a different username"
+            });
         } else {
             res.status(500).json({
                 status: "error",
@@ -38,6 +41,7 @@ function sendProductionError(error, res) {
         }
     }
 }
+
 function sendDevelopementError(error, res) {
     if (error.isOperational) {
         res.status(error.statusCode).json({

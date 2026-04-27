@@ -2,6 +2,7 @@ import { AppError, handleAsyncError } from "../error.js";
 import pool from "../database.js";
 import argon from "argon2";
 import jwt from "jsonwebtoken";
+import { INT_MAX } from "../helpers.js";
 
 const signJwtToken = (email, username) => {
     return jwt.sign({ email, username }, process.env.JWT_SIGN_SECRET, {
@@ -66,15 +67,20 @@ export const signup = handleAsyncError(async (req, res, next) => {
     username += '@clearcash';
     password = await hashPassword(password);
 
-    await pool.query("INSERT INTO users (name, email, username, phone, password) VALUES ($1, $2, $3, $4, $5)", [name, email, username, phone, password]);
-
-    // FIXME: Make the Main pocket of the user too.
+    const user_id = (await pool.query("INSERT INTO users (name, email, username, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING user_id", [name, email, username, phone, password])).rows[0].user_id;
+    let pocket;
+    try {
+        pocket = (await pool.query("INSERT INTO pockets (user_id, pocket_name, pocket_limit, color) VALUES ($1, 'Main', $2, 'RED') RETURNING pocket_id, pocket_name, pocket_balance, color", [user_id, INT_MAX])).rows[0];
+    } catch (err) {
+        (await pool.query("DELETE FROM users WHERE user_id=$1", [user_id]));        
+        throw err;
+    }
 
     signTokenAndSetInCookie(email, username, res);
     res.status(200).json({
         status: "success",
         data: {
-            name, email, username
+            name, email, username, pocket
         }
     });
 });

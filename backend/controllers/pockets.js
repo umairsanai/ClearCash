@@ -40,11 +40,21 @@ export const udpatePocket = handleAsyncError(async (req, res, next) => {
     });
 });
 
-export const deletePocket = handleAsyncError(async (req, res, next) => {
-    // FIXME: Check if the pocket being deleted is the Main pocket or not.
-    // IT SHOULD NOT BE "MAIN" POCKET !!!
+export const deletePocket = handleAsyncError(async (req, res, next) => {    
+    const pocket = (await pool.query("SELECT user_id, pocket_name AS name, pocket_balance AS balance FROM pockets WHERE pocket_id=$1", [req.params.pocket_id])).rows[0];
+
+    if (!pocket) 
+        return next(new AppError("This pocket doesn't exist!", 400));
+    if (pocket.user_id !== req.user.user_id) 
+        return next(new AppError("You can't delete someone else's pocket BABY!", 401));
+    if (pocket.name === "Main")
+        return next(new AppError("You can't delete your 'Main' pocket!", 400));
+
+    /*
+        1. Transfer money to Main pocket
+        2. Delete pocket        
+    */
+    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance=pocket_balance+${pocket.balance} WHERE user_id=${req.user.user_id} AND pocket_name='Main'; DELETE FROM pockets WHERE user_id=${req.user.user_id} AND pocket_id=${req.params.pocket_id}; COMMIT`));
     
-    // const pocket_name = (await pool.query("SELECT pocket_name FROM pockets ")).rows
-    (await pool.query("DELETE FROM pockets WHERE user_id=$1 AND pocket_id=$2", [req.user.user_id, req.params.pocket_id]));
     res.sendStatus(204);
 });

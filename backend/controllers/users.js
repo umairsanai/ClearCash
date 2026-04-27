@@ -18,6 +18,7 @@ export const getMe = handleAsyncError(async (req, res, next) => {
     user.pockets = user.pockets.map(pocket => {
         user.total_balance = pocket.total_balance;
         delete pocket.total_balance
+        if (pocket.pocket_name === "Main") delete pocket.pocket_limit;
         return pocket;
     });
 
@@ -32,27 +33,38 @@ export const getMe = handleAsyncError(async (req, res, next) => {
 
 export const sendMoney = handleAsyncError(async (req, res, next) => {
 
-    // TODO: TEST THIS ROUTE !!!
-
     // Money will always be transferred to the Main pocket of the Recipient.
 
-    const { sender_pocket_id, recipient_user_id, amount } = req.body;
-
+    let { sender_pocket_id, recipient_user_id, amount } = req.body;
     if (!recipient_user_id || !sender_pocket_id || !amount)
         return next(new AppError("Insufficient Data: Please provide complete data !", 400));    
-    if (amount <= 0)
-        return next(new AppError("Incorrect Amount !", 400));
 
-    // Check if recipient has that much money in that pocket.
+    [sender_pocket_id, recipient_user_id, amount] = [sender_pocket_id, recipient_user_id, amount].map(i => +i);
+    
+    if (!Number.isInteger(amount) || !Number.isInteger(recipient_user_id) || !Number.isInteger(sender_pocket_id) || amount <= 0)
+        return next(new AppError("Incorrect Amount!", 400));
+
+    // Check if sender has that much money in that pocket.
     const sender_pocket = (await pool.query("SELECT user_id, pocket_balance FROM pockets WHERE user_id=$1 AND pocket_id=$2", [req.user.user_id, sender_pocket_id])).rows[0];
-
+    
     if (!sender_pocket)
         return next(new AppError("Please provide a valid Pocket!", 400));
     if (sender_pocket.pocket_balance < amount) 
         return next(new AppError("Sorry! You have insufficient funds.", 400));
+    
+    // Check if recipient exists.
+    const recipient_pocket = (await pool.query("SELECT pocket_id FROM pockets WHERE user_id=$1 AND pocket_name='Main'", [recipient_user_id])).rows[0];
 
-    // Deduct funds from sender, and transfer funds in Main pocket of the recipient.
-    (await pool.query("BEGIN; UPDATE pockets SET pocket_balance=pocket_balance-$3 WHERE user_id=$1 AND pocket_id=$2; UPDATE pockets SET pocket_balance=pocket_balance+$3 WHERE user_id=$4 AND pocket_name='Main'; COMMIT", [req.user.user_id, sender_pocket_id, amount, recipient_user_id]));
+    if (!recipient_pocket)
+        return next (new AppError("The user you're trying to send money to, doesn't exist!", 400));
+
+    /*
+        1. Deduct funds from sender. 
+        2. Transfer funds in Main pocket of the recipient.
+        3. Create transaction record.        
+    */
+
+    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance=pocket_balance-${amount} WHERE user_id=${req.user.user_id} AND pocket_id=${sender_pocket_id}; UPDATE pockets SET pocket_balance=pocket_balance+${amount} WHERE user_id=${recipient_user_id} AND pocket_id=${recipient_pocket.pocket_id}; INSERT INTO transactions(sender_user_id, recipient_user_id, sender_pocket_id, amount) VALUES (${req.user.user_id}, ${recipient_user_id}, ${sender_pocket_id}, ${amount}); COMMIT`));
 
     res.status(200).json({
         status: "success"
@@ -77,6 +89,15 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
         status: "success",
         data: spendings
     });    
+});
+
+// TODO:
+export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, next) => {
+        
+});
+
+export const findRecipient = handleAsyncError(async (req, res, next) => {
+
 });
 
 async function getSpendings(user_id, start_date, end_date) {
