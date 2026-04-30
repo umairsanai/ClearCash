@@ -91,13 +91,45 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
     });    
 });
 
-// TODO:
-export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, next) => {
-        
+export const findRecipient = handleAsyncError(async (req, res, next) => {
+    const search = req.query?.search;
+    const recipients = (await pool.query(`SELECT user_id, name, username, phone FROM users WHERE phone ILIKE '${`%${search}%`}' OR name ILIKE '${`%${search}%`}' OR username ILIKE '${`%${search}%@clearcash`}'`)).rows;
+    res.status(200).json({
+        status: "success",
+        data: recipients
+    });
 });
 
-export const findRecipient = handleAsyncError(async (req, res, next) => {
+export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, next) => {
 
+    let { sender_pocket, receiver_pocket, amount } = req.body;
+
+    if (!sender_pocket || !receiver_pocket || !amount || !Number.isInteger(sender_pocket) || !Number.isInteger(receiver_pocket) || !Number.isInteger(amount) || amount <= 0)
+        return next(new AppError("Insufficient or Incorrect Query Data!", 400));
+
+    // Do both pockets belong to logged in user?
+    const pockets = (await pool.query("SELECT pocket_id, pocket_balance, pocket_limit FROM pockets WHERE pocket_id = ANY($2) AND user_id=$1", [req.user.user_id, [sender_pocket, receiver_pocket]])).rows;
+    if (pockets.length !== 2) 
+        return next(new AppError("Incorrect Pocket(s)!", 400));
+
+    sender_pocket = pockets.find((pocket) => pocket.pocket_id === sender_pocket);
+    receiver_pocket = pockets.find((pocket) => pocket.pocket_id === receiver_pocket);
+
+    // Check balance from sender pocket.    
+    if (sender_pocket.pocket_balance < amount)
+        return next(new AppError("The pocket you're sending from, has not sufficient funds to transfer.", 400));
+    
+    // Check receiver pocket's limit
+    if (receiver_pocket.pocket_limit - receiver_pocket.pocket_balance < amount)
+        return next(new AppError("The pocket you're sending to, has not enough room left.", 400));
+
+    // Transfer (With No Transaction Record)
+    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance = pocket_balance - ${amount} WHERE pocket_id = ${sender_pocket.pocket_id}; UPDATE pockets SET pocket_balance = pocket_balance + ${amount} WHERE pocket_id = ${receiver_pocket.pocket_id}; COMMIT`))
+
+    // Response.
+    res.status(200).json({
+        status: "success"
+    });
 });
 
 async function getSpendings(user_id, start_date, end_date) {
