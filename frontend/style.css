@@ -430,11 +430,11 @@ input::-webkit-inner-spin-button {
 
 /* Theme 1: Green */
 .pocket-theme-green { border-color: rgba(34, 197, 94, 0.3); }
-.pocket-theme-green:hover { border-color: rgba(34, 197, 94, 0.4); }
-.pocket-theme-green .pocket-card-header, .spending-theme-green .spending-item-category, .spending-theme-green .spending-item-amount { color: #4ade80; }
-.pocket-theme-green .progress-bar, .spending-theme-green .progress-bar { background-color: #22c55e; }
-.pocket-theme-green .pocket-card-action { color: #4ade80; }
-.icon-green { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; }
+.pocket-theme-green:hover { border-color: rgba(34, 197, 94, 0.5); }
+.pocket-theme-green .pocket-card-header, .spending-theme-green .spending-item-category, .spending-theme-green .spending-item-amount { color: #22c55e; } /* Standard vibrant green */
+.pocket-theme-green .progress-bar, .spending-theme-green .progress-bar { background-color: #4ade80; } /* Lighter, punchier green bar */
+.pocket-theme-green .pocket-card-action { color: #22c55e; }
+.icon-green { background-color: rgba(34, 197, 94, 0.15); color: #22c55e; }
 
 /* Theme 2: Yellow */
 .pocket-theme-yellow { border-color: rgba(234, 179, 8, 0.3); }
@@ -475,6 +475,38 @@ input::-webkit-inner-spin-button {
 .pocket-theme-orange .progress-bar, .spending-theme-orange .progress-bar { background-color: #f97316; }
 .pocket-theme-orange .pocket-card-action { color: #fb923c; }
 .icon-orange { background-color: rgba(249, 115, 22, 0.2); color: #fb923c; }
+
+/* Theme 7: Dark Green */
+.pocket-theme-darkgreen { border-color: rgba(6, 78, 59, 0.3); }
+.pocket-theme-darkgreen:hover { border-color: rgba(6, 78, 59, 0.5); }
+.pocket-theme-darkgreen .pocket-card-header, .spending-theme-darkgreen .spending-item-category, .spending-theme-darkgreen .spending-item-amount { color: #10b981; } /* Brighter emerald for text contrast */
+.pocket-theme-darkgreen .progress-bar, .spending-theme-darkgreen .progress-bar { background-color: #064e3b; } /* Very deep forest green */
+.pocket-theme-darkgreen .pocket-card-action { color: #10b981; }
+.icon-darkgreen { background-color: rgba(6, 78, 59, 0.2); color: #10b981; }
+
+/* Theme 8: Maroon */
+.pocket-theme-maroon { border-color: rgba(127, 29, 29, 0.3); }
+.pocket-theme-maroon:hover { border-color: rgba(127, 29, 29, 0.4); }
+.pocket-theme-maroon .pocket-card-header, .spending-theme-maroon .spending-item-category, .spending-theme-maroon .spending-item-amount { color: #f87171; }
+.pocket-theme-maroon .progress-bar, .spending-theme-maroon .progress-bar { background-color: #7f1d1d; }
+.pocket-theme-maroon .pocket-card-action { color: #f87171; }
+.icon-maroon { background-color: rgba(127, 29, 29, 0.2); color: #f87171; }
+
+/* Theme 9: Pink */
+.pocket-theme-pink { border-color: rgba(219, 39, 119, 0.3); }
+.pocket-theme-pink:hover { border-color: rgba(219, 39, 119, 0.4); }
+.pocket-theme-pink .pocket-card-header, .spending-theme-pink .spending-item-category, .spending-theme-pink .spending-item-amount { color: #f472b6; }
+.pocket-theme-pink .progress-bar, .spending-theme-pink .progress-bar { background-color: #db2777; }
+.pocket-theme-pink .pocket-card-action { color: #f472b6; }
+.icon-pink { background-color: rgba(219, 39, 119, 0.2); color: #f472b6; }
+
+/* Theme 10: White */
+.pocket-theme-white { border-color: rgba(255, 255, 255, 0.3); }
+.pocket-theme-white:hover { border-color: rgba(255, 255, 255, 0.4); }
+.pocket-theme-white .pocket-card-header, .spending-theme-white .spending-item-category, .spending-theme-white .spending-item-amount { color: #f8fafc; }
+.pocket-theme-white .progress-bar, .spending-theme-white .progress-bar { background-color: #ffffff; }
+.pocket-theme-white .pocket-card-action { color: #f8fafc; }
+.icon-white { background-color: rgba(255, 255, 255, 0.2); color: #f8fafc; }
 
 /* --- End Pocket Themes --- */
 
@@ -1066,13 +1098,13 @@ input::-webkit-inner-spin-button {
     color: #9ca3af;
 }
 
-.recent-contacts h4 {
+.matching-contact-results h4 {
     font-size: 0.875rem;
     font-weight: 600;
     color: #4b5563;
     margin-bottom: 0.75rem;
 }
-.recent-contacts ul {
+.matching-contact-results ul {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;

@@ -267,38 +267,10 @@
                     <i class="fas fa-search"></i>
                 </div>
                 
-                <div class="recent-contacts">
-                    <h4>Recent</h4>
-                    <ul>
-                        <li class="contact-item">
-                            <div class="contact-info">
-                                <!-- Placeholder icon -->
-                                <div class="contact-icon">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div>
-                                    <p class="name">Ahmad Suleman</p>
-                                    <p class="handle">@ahmad</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </li>
-                        <li class="contact-item">
-                            <div class="contact-info">
-                                <!-- Placeholder icon -->
-                                <div class="contact-icon" style="background-color: #fef2f2; color: #b91c1c;">
-                                    <i class="fas fa-user-circle"></i>
-                                </div>
-                                <div>
-                                    <p class="name">Fatima Khan</p>
-                                    <p classs="handle">0300-1234567</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-right"></i>
-                        </li>
-                    </ul>
+                <div class="matching-contact-results">
+                    <ul class="matching-contacts-list-container" ></ul>
                 </div>
-                <button id="confirm-credentials-btn" class="confirm-credentials-btn">Confirm</button>
+                <!-- <button id="confirm-credentials-btn" class="confirm-credentials-btn">Confirm</button> -->
             </div>
             
             <!-- Modal Body: Step 2 (Amount & Dialpad) - HIDDEN BY DEFAULT -->
@@ -424,6 +396,23 @@
                         <input type="number" id="pocket-budget-input" class="form-input" value="10000" required>
                     </div>
 
+                    <div class="form-group">
+                        <label for="pocket-color-input">Pocket Color</label>
+                        <select name="" id="pocket-color-input" class="form-input">
+                            <option value="RED">Red</option>
+                            <option value="GREEN">Green</option>
+                            <option value="ORANGE">Orange</option>
+                            <option value="YELLOW">Yellow</option>
+                            <option value="BLUE">Blue</option>
+                            <option value="PURPLE">Purple</option>
+                            <option value="DARKGREEN">Dark Green</option>
+                            <option value="MAROON">Maroon</option>
+                            <option value="PINK">Pink</option>
+                            <option value="BLACK">Black</option>
+                            <option value="WHITE">White</option>
+                        </select>
+                    </div>
+
                     <div class="form-actions">
                         <button type="button" id="delete-pocket-btn" class="btn-danger">
                             <i class="fas fa-trash-alt"></i> Delete Pocket
@@ -467,6 +456,23 @@
                     <div class="form-group">
                         <label for="new-pocket-budget-input">Total Budget (Rs)</label>
                         <input type="number" id="new-pocket-budget-input" class="form-input" placeholder="e.g., 5000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="new-pocket-color-input">Pocket Color</label>
+                        <select name="" id="new-pocket-color-input" class="form-input">
+                            <option selected value="RED">Red</option>
+                            <option value="GREEN">Green</option>
+                            <option value="ORANGE">Orange</option>
+                            <option value="YELLOW">Yellow</option>
+                            <option value="BLUE">Blue</option>
+                            <option value="PURPLE">Purple</option>
+                            <option value="DARKGREEN">Dark Green</option>
+                            <option value="MAROON">Maroon</option>
+                            <option value="PINK">Pink</option>
+                            <option value="BLACK">Black</option>
+                            <option value="WHITE">White</option>
+                        </select>
                     </div>
 
                     <div class="form-actions">

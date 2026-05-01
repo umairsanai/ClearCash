@@ -13,7 +13,7 @@ import pool from "./database.js";
 
 const app = express();
 
-app.use(cors({origin: 'http://localhost:5500', credentials: true}));
+app.use(cors({origin: 'http://127.0.0.1:5500', credentials: true}));
 
 // BODY PARSING
 app.set('query parser', 'extended');    
