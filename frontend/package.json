@@ -1,11 +1,23 @@
 {
   "name": "clearcash-frontend",
+  "source": "index.html",
   "version": "1.0.0",
+  "type": "module",
   "description": "front-end of the clearcash app.",
-  "main": "script.js",
   "scripts": {
-    "dev": "py -m http.server 5500"
+    "dev-index": "esbuild js/index.js --bundle --outfile=dist/index.js --format=esm --target=es2022 --watch",
+    "dev-auth": "esbuild js/auth.js --bundle --outfile=dist/auth.js --format=esm --target=es2022 --watch"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "engines": {
+    "browsers": "> 0.5%, last 2 versions, not dead"
   },
   "author": "Umair Anwar",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "validator": "^13.15.35"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
 }

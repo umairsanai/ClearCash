@@ -10,7 +10,7 @@ export class AppError extends Error {
 }
 export function handleAsyncError(func) {
     return (req, res, next) => {
-        func(req, res, next).catch(next);
+        func(req, res, next).catch((error) => next(error));
     }
 }
 export function errorMiddleware(error, req, res, next) {    
@@ -50,7 +50,7 @@ function sendDevelopementError(error, res) {
             stack: error.stack
         });
     } else {
-        res.status(400).json({
+        res.status(500).json({
             status: "error",
             error
         });

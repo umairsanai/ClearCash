@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClearCash - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <script defer type="module" src="dist/auth.js"></script>
+</head>
+<body>
+    <header class="auth-header">
+        <nav class="header-nav">
+            <div class="header-logo">
+                <span class="logo-icon" aria-hidden="true">
+                    <i class="fas fa-wallet"></i>
+                </span>
+                <h1 id="app-name">ClearCash</h1>
+            </div>
+            <div class="header-cta">
+                <a class="ghost-link" href="index.html">Go to app</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="auth-main">
+        <section class="auth-card" aria-labelledby="auth-title">
+            <div class="auth-card-header">
+                <p class="chip" id="auth-chip">Welcome back</p>
+                <h2 id="auth-title">Login</h2>
+                <p id="auth-subtitle" class="subtitle">Use your ClearCash username and password.</p>
+            </div>
+            <form id="auth-form" novalidate>
+                <div id="auth-fields" class="auth-fields">
+                    <div class="form-group"></div>
+                </div>
+
+                <button id="submit-btn" type="submit" class="primary-btn">Login</button>
+
+                <p class="switch-text">
+                    <span id="switch-hint">New here?</span>
+                    <button type="button" id="switch-btn" class="link-btn">Create an account</button>
+                </p>
+
+                <p id="form-message" class="form-message" role="alert" aria-live="polite"></p>
+            </form>
+        </section>
+    </main>
+
+    <footer class="auth-footer">
+        <p>© 2025 ClearCash. All rights reserved.</p>
+    </footer>
+</body>
+</html>

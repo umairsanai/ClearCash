@@ -7,14 +7,24 @@ export async function request(url, options) {
 }
 
 export async function fetchUser() {
-    return (await request(`${API_URL}/users/me`, {
-        credentials: "include"
-    })).user;
+    try {
+        let res = await fetch(`${API_URL}/users/me`, {
+            credentials: "include"
+        });        
+        const ok = res.ok;
+        res = await res.json();
+        if (!ok) {
+            throw new Error(res.message || "Couldn't fetch user");
+        }
+        return res.data.user;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
 
 export function capitalize(word) {
-    return 
-    word
+    return word
     .map(w => w[0].toUpperCase() + w.toLowerCase().slice(1))
     .join(" ");
 } 

@@ -98,7 +98,7 @@ export const login = handleAsyncError(async (req, res, next) => {
         user = (await pool.query("SELECT name, username, email, password FROM users WHERE username=$1", [input_username])).rows[0];
 
     if (!user || !await verifyPassword(user.password, input_password))
-        return next(new AppError("Incorrect email or password!", 401));
+        return next(new AppError("Incorrect username/email or password!", 401));
 
     signTokenAndSetInCookie(user.email, user.username, res);
     

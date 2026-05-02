@@ -1,4 +1,3 @@
-"use strict";
 import { fetchUser } from "./helpers.js";
 import { greet, showBalance } from "./user.js";
 import { updatePockets } from "./pockets.js";
@@ -8,13 +7,16 @@ import "./calculator.js";
 import "./notifications.js"
 import "./account.js"
 
-
-window.user = await fetchUser();
-greet();
-showBalance();
-updatePockets();
-
-updateDates();
-updateSpendings();
-showSpendings();
-updateTransactions();
+try {
+    window.user = await fetchUser();
+    greet();
+    showBalance();
+    updatePockets();
+    updateDates();
+    updateSpendings();
+    showSpendings();
+    updateTransactions();
+} catch (error) {
+    console.error(error);
+    window.location.href = "auth.html";
+}
