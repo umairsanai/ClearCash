@@ -74,6 +74,7 @@ function renderLogin() {
 function renderSignup() {
     currentMode = "signup";
     authFields.innerHTML = signupFieldsMarkup;
+    authFields.querySelector("#signup-name").focus();
 
     authTitle.textContent = "Create account";
     authSubtitle.textContent = "Set up your ClearCash account in minutes.";
