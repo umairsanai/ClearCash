@@ -1,4 +1,4 @@
-import { API_URL, convertInSnakeCase, fetchUser, request, format } from "./helpers.js";
+import { API_URL, convertInSnakeCase, fetchUser, request, format, fetchPockets } from "./helpers.js";
 
 let pocketInEdit = null
 const pocketsContainer = document.querySelector(".pocket-grid");
@@ -117,7 +117,7 @@ async function confirmTransferToPocket(e) {
             }),
             credentials: "include"
         });
-        window.user.pockets = (await fetchUser()).pockets;
+        window.user.pockets = await fetchPockets();
         updatePockets();
 
     } catch (error) {
@@ -157,7 +157,7 @@ async function deletePocket(e) {
             method: 'DELETE',
             credentials: "include"
         });
-        window.user.pockets = (await fetchUser()).pockets;
+        window.user.pockets = await fetchPockets();
         updatePockets();        
 
     } catch (error) {
@@ -196,8 +196,7 @@ async function submitEditPocketForm(e) {
             }),
             credentials: "include"
         })
-        window.user.pockets = 
-        window.user?.pockets?.map(pocket => pocket.pocket_name === old_pocket_name ? updatedPocket : pocket);
+        window.user.pockets = await fetchPockets(); 
         updatePockets();
  
     } catch (error) {

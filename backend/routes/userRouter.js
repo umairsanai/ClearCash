@@ -1,12 +1,13 @@
 import express from "express";
 import { login, logout, protect, signup } from "../controllers/auth.js";
 import { AppError } from "../error.js";
-import { getMe, getCurrentMonthTransactions, getWeeklySpendings, sendMoney, transferMoneyToAnotherPocket, findRecipient } from "../controllers/users.js";
+import { getMe, getCurrentMonthTransactions, getWeeklySpendings, sendMoney, transferMoneyToAnotherPocket, findRecipient, getAllUserPockets } from "../controllers/users.js";
 
 const router = express.Router();
 
 router.get("/me", protect, getMe);
 router.get("/weekly-spendings", protect, getWeeklySpendings);
+router.get("/pockets", protect, getAllUserPockets);
 router.get("/transactions", protect, getCurrentMonthTransactions);
 
 router.post("/send", protect, sendMoney);

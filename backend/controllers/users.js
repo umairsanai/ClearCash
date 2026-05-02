@@ -13,15 +13,8 @@ export const getMe = handleAsyncError(async (req, res, next) => {
         username: req.user.username,
         total_balance: 0
     };
-    user.pockets = (await pool.query(" SELECT pocket_id, pocket_name, pocket_balance, pocket_limit, color, SUM(pocket_balance) OVER ()::INT AS total_balance FROM pockets WHERE user_id=$1", [req.user.user_id])).rows;
-
-    user.pockets = user.pockets.map(pocket => {
-        user.total_balance = pocket.total_balance;
-        delete pocket.total_balance
-        if (pocket.pocket_name === "Main") delete pocket.pocket_limit;
-        return pocket;
-    });
-
+    user.pockets = await getPockets(req.user.user_id);
+    user.total_balance = user.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
     user.spendings = await getSpendings(req.user.user_id, extractDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), extractDate(new Date()));
     user.transactions = await getTransactions(req.user.user_id, 5);
 
@@ -91,6 +84,14 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
     });    
 });
 
+export const getAllUserPockets = handleAsyncError(async (req, res, next) => {
+    const pockets = await getPockets(req.user.user_id);
+    res.status(200).json({
+        status: "success",
+        data: pockets
+    });
+});
+
 export const findRecipient = handleAsyncError(async (req, res, next) => {
     const search = req.query?.search;
     const recipients = (await pool.query(`SELECT user_id, name, username, phone FROM users WHERE phone ILIKE '${`%${search}%`}' OR name ILIKE '${`%${search}%`}' OR username ILIKE '${`%${search}%@clearcash`}'`)).rows;
@@ -138,4 +139,14 @@ async function getSpendings(user_id, start_date, end_date) {
 
 async function getTransactions(user_id, limit=500) {
     return (await pool.query("SELECT transaction_date::TEXT, CASE WHEN transactions.sender_user_id=$1 THEN pocket_name ELSE 'Main' END AS pocket_name, CASE WHEN transactions.sender_user_id=$1 THEN -amount ELSE amount END AS transaction_amount, CASE WHEN transactions.sender_user_id=$1 THEN CONCAT('Send Money to ', recipient.name) ELSE CONCAT('Received Money from ', sender.name) END AS transaction_message FROM transactions INNER JOIN users recipient ON recipient.user_id = transactions.recipient_user_id INNER JOIN users sender ON sender.user_id = transactions.sender_user_id INNER JOIN pockets ON pockets.pocket_id=transactions.sender_pocket_id WHERE (transactions.sender_user_id=$1 OR transactions.recipient_user_id=$1) AND DATE_TRUNC('month', transactions.transaction_date)::DATE = DATE_TRUNC('month', CURRENT_DATE)::DATE ORDER BY transactions.transaction_date LIMIT $2", [user_id, limit])).rows;
+}
+
+async function getPockets(user_id) {
+    let pockets = (await pool.query("SELECT pocket_id, pocket_name, pocket_balance, pocket_limit, color FROM pockets WHERE user_id=$1", [user_id])).rows;
+    pockets = pockets.map(pocket => {
+        if (pocket.pocket_name === "Main") 
+            delete pocket.pocket_limit;
+        return pocket;
+    });
+    return pockets;
 }

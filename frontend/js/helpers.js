@@ -22,6 +22,22 @@ export async function fetchUser() {
         throw error;
     }
 };
+export async function fetchPockets() {
+    try {
+        let res = await fetch(`${API_URL}/users/pockets`, {
+            credentials: "include"
+        });        
+        const ok = res.ok;
+        res = await res.json();
+        if (!ok) {
+            throw new Error(res.message || "Couldn't fetch pockets");
+        }
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
 
 export function capitalize(word) {
     return word
