@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import { Pool, Client } from 'pg'
 
-dotenv.config({path: "config.env"});
+dotenv.config({path: ".env"});
 
 
 // LOCAL DATABASE
