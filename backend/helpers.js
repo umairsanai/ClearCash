@@ -6,12 +6,16 @@ export const wait = (seconds) => new Promise((res) => setTimeout(res, seconds*10
 
 export const isString = (str) => Object.prototype.toString.call(str) === '[object String]' && (str instanceof String || typeof str === 'string');
 
-export const extractDate = (date) => date.toISOString().split("T")[0];
+export function formatDate(date) {
+    return new Intl.DateTimeFormat('fr-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(date);
+}
 
 export const initialize = () => {
     process.env.MODE = process.env.MODE.trim();
-    process.env.DATABASE_USERNAME = process.env.DATABASE_USERNAME.trim();
-    process.env.DATABASE_PASSWORD = process.env.DATABASE_PASSWORD.trim();  
 }
 export const formatColumnName = (name) => name.replaceAll(" ", "_").toLowerCase();
 

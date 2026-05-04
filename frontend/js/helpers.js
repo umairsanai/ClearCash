@@ -50,7 +50,15 @@ export function format(number) {
         style: 'decimal' 
     }).format(number);
 } 
-    
+
+export function formatDate(date) {
+    return new Intl.DateTimeFormat('fr-CA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }).format(date);
+}
+
 export function convertInSnakeCase(name) {
     return name.replaceAll(" ", "_").toLowerCase();
 } 

@@ -1,6 +1,6 @@
 import pool from "../database.js";
 import { AppError, handleAsyncError } from "../error.js";
-import { extractDate } from "../helpers.js";
+import { formatDate } from "../helpers.js";
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
@@ -15,7 +15,7 @@ export const getMe = handleAsyncError(async (req, res, next) => {
     };
     user.pockets = await getPockets(req.user.user_id);
     user.total_balance = user.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
-    user.spendings = await getSpendings(req.user.user_id, extractDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), extractDate(new Date()));
+    user.spendings = await getSpendings(req.user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
     user.transactions = await getTransactions(req.user.user_id, 5);
 
     res.status(200).json({

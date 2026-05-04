@@ -141,20 +141,24 @@ async function validateSignup() {
     else if (validator.isStrongPassword(password)) 
         throw new Error("Password should be at least 6 characters.");
 
-    try {
-        (await fetch(`${API_URL}/users/signup`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                name, email, username, phone, password
-            }),
-            credentials: "include"
-        }));
-    } catch (error) {
-        throw error;
-    }
+    let res = await fetch(`${API_URL}/users/signup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name, email, username, phone, password
+        }),
+        credentials: "include"
+    });
+    const ok = res.ok;
+    res = await res.json();
+
+    if (!ok) {
+        console.log(res);
+        throw new Error(res.message);            
+    }        
+    window.user = res.data;
 }
 
 switchBtn.addEventListener("click", () => {

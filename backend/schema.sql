@@ -2,9 +2,9 @@ CREATE TYPE COLOR_TYPE AS ENUM('RED', 'GREEN', 'ORANGE', 'YELLOW', 'BLUE', 'PURP
 
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
-    username VARCHAR(20) NOT NULL UNIQUE,
-    email VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
     phone VARCHAR(12) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     password_changed_at BIGINT DEFAULT 0 CHECK(password_changed_at >= 0),

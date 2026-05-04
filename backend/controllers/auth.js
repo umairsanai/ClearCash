@@ -3,6 +3,7 @@ import pool from "../database.js";
 import argon from "argon2";
 import jwt from "jsonwebtoken";
 import { INT_MAX } from "../helpers.js";
+import { fetchPockets } from "../../frontend/js/helpers.js";
 
 const signJwtToken = (email, username) => {
     return jwt.sign({ email, username }, process.env.JWT_SIGN_SECRET, {
@@ -77,10 +78,18 @@ export const signup = handleAsyncError(async (req, res, next) => {
     }
 
     signTokenAndSetInCookie(email, username, res);
+
     res.status(200).json({
         status: "success",
         data: {
-            name, email, username, pocket
+            id: user_id,
+            name, 
+            email, 
+            username, 
+            total_balance: 0,
+            pockets: [pocket],
+            spendings: [],
+            transactions: []
         }
     });
 });

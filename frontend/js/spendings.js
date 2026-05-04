@@ -1,16 +1,16 @@
-import { months, fetchUser, capitalize, format } from "./helpers.js";
+import { months, fetchUser, capitalize, format, request, API_URL, formatDate } from "./helpers.js";
 
 const DAY = 86400000;
 
-let currDate = (Date.now() - Date.now()%DAY + DAY - 10);
-let startOfWeek = new Date((Date.now() - (Date.now()%DAY) + DAY - 10) -  6*DAY);
-let endOfWeek = new Date((Date.now() - (Date.now()%DAY) + DAY - 10));
+let currDate = Date.now();
+let startOfWeek = new Date(currDate -  6*DAY);
+let endOfWeek = new Date();
 let dateContainer = document.getElementById("week-range-label");
 let spendingsList = document.getElementById("spending-list-container");
 let arrowsContainer = document.querySelector(".spending-nav");
 let totalExpense = 0;
 
-function changeWeek(e) {
+async function changeWeek(e) {
     if (e.target.closest("#prev-week-btn")) {            
         currDate -= 7*DAY;      
     } else if (e.target.closest("#next-week-btn")) {
@@ -21,7 +21,7 @@ function changeWeek(e) {
     startOfWeek = new Date(currDate - 6*DAY);
     endOfWeek = new Date(currDate);
     updateDates();
-    updateSpendings();
+    await updateSpendings();
     showSpendings();
 }
 
@@ -30,7 +30,10 @@ export function updateDates() {
 }
 
 export async function updateSpendings() {
-    window.user = await fetchUser();
+    window.user.spendings = await request(`${API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
+        method: 'GET',
+        credentials: "include"
+    });
     totalExpense = window.user.spendings.reduce((sum, elem) => sum + elem.spending, 0);
 }
 
