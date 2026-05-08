@@ -30,7 +30,7 @@ export function updateDates() {
 }
 
 export async function updateSpendings() {
-    window.user.spendings = await request(`${import.meta.env.API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
+    window.user.spendings = await request(`${import.meta.env.VITE_API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
         method: 'GET',
         credentials: "include"
     });

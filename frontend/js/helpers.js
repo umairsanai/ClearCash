@@ -6,7 +6,7 @@ export async function request(url, options) {
 
 export async function fetchUser() {
     try {
-        let res = await fetch(`${import.meta.env.API_URL}/users/me`, {
+        let res = await fetch(`${import.meta.env.VITE_API_URL}/users/me`, {
             credentials: "include"
         });        
         const ok = res.ok;
@@ -22,7 +22,7 @@ export async function fetchUser() {
 };
 export async function fetchPockets() {
     try {
-        let res = await fetch(`${import.meta.env.API_URL}/users/pockets`, {
+        let res = await fetch(`${import.meta.env.VITE_API_URL}/users/pockets`, {
             credentials: "include"
         });        
         const ok = res.ok;

@@ -64,7 +64,7 @@ function getRecipients() {
         return;
     }
     findUserTimeoutID = setTimeout(async () => {
-        matchingContacts = await request(`${import.meta.env.API_URL}/users/find?search=${sendMoneyRecipeintIDInput.value}`, {
+        matchingContacts = await request(`${import.meta.env.VITE_API_URL}/users/find?search=${sendMoneyRecipeintIDInput.value}`, {
             method: "GET",
             credentials: "include"
         });
@@ -131,7 +131,7 @@ async function sendMoney() {
 
     try {
         
-        await request(`${import.meta.env.API_URL}/users/send`, {
+        await request(`${import.meta.env.VITE_API_URL}/users/send`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -19,7 +19,7 @@ export function greet() {
 }
 
 async function logout() {
-    const res = await fetch(`${import.meta.env.API_URL}/users/logout`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/users/logout`, {
         method: "POST",
         credentials: "include"
     });
