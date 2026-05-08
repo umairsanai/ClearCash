@@ -15,7 +15,7 @@ const signTokenAndSetInCookie = (email, username, res) => {
     res.cookie("clearcash-login-token", signJwtToken(email, username), {
         httpOnly: true,
         sameSite: "none",
-        path: "/api",
+        path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,      // 7 days
         secure: process.env.MODE === "prod"
     });
@@ -123,8 +123,8 @@ export const login = handleAsyncError(async (req, res, next) => {
 
 export const logout = (req, res, next) => {
     res.cookie("clearcash-login-token", "", {
-        sameSite: "strict",
-        path: "/api",
+        sameSite: "none",
+        path: "/",
         maxAge: 0
     });
     res.status(200).json({
