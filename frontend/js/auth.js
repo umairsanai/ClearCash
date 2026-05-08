@@ -1,5 +1,4 @@
 import validator from "validator";
-import { API_URL } from "./helpers.js";
 
 const authForm = document.getElementById("auth-form");
 const authFields = document.getElementById("auth-fields");
@@ -95,7 +94,7 @@ async function validateLogin() {
     if (!password) 
         throw new Error("Password is required.");
 
-    let response = await fetch(`${API_URL}/users/login`, {
+    let response = await fetch(`${import.meta.env.API_URL}/users/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -141,7 +140,7 @@ async function validateSignup() {
     else if (validator.isStrongPassword(password)) 
         throw new Error("Password should be at least 6 characters.");
 
-    let res = await fetch(`${API_URL}/users/signup`, {
+    let res = await fetch(`${import.meta.env.API_URL}/users/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

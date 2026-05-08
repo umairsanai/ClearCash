@@ -1,4 +1,4 @@
-import { API_URL, convertInSnakeCase, fetchUser, request, format, fetchPockets } from "./helpers.js";
+import { convertInSnakeCase, fetchUser, request, format, fetchPockets } from "./helpers.js";
 
 let pocketInEdit = null
 const pocketsContainer = document.querySelector(".pocket-grid");
@@ -105,7 +105,7 @@ async function confirmTransferToPocket(e) {
 
     try {
 
-        await request(`${API_URL}/users/transfer-to-pocket`, {
+        await request(`${import.meta.env.API_URL}/users/transfer-to-pocket`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -153,7 +153,7 @@ async function deletePocket(e) {
     
     try {
         
-        await fetch(`${API_URL}/pockets/delete/${pocket_id}`, {
+        await fetch(`${import.meta.env.API_URL}/pockets/delete/${pocket_id}`, {
             method: 'DELETE',
             credentials: "include"
         });
@@ -183,7 +183,7 @@ async function submitEditPocketForm(e) {
 
     try {
  
-        updatedPocket = await request(`${API_URL}/pockets/update`, {
+        updatedPocket = await request(`${import.meta.env.API_URL}/pockets/update`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json'  
@@ -239,7 +239,7 @@ async function createNewPocket(e) {
 
     try {
         
-        newPocket = await request(`${API_URL}/pockets/create`, {
+        newPocket = await request(`${import.meta.env.API_URL}/pockets/create`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'  

@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "set MODE=dev && nodemon index.js",
-    "prod": "set MODE=prod && nodemon index.js"
+    "dev": "MODE=dev nodemon index.js",
+    "prod": "node index.js"
   },
   "author": "Umair Anwar",
   "license": "ISC",
@@ -22,7 +22,9 @@
     "hpp-clean": "^1.0.4",
     "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
-    "nodemon": "^3.1.14",
     "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

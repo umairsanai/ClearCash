@@ -1,5 +1,5 @@
 import { updateSpendings, showSpendings } from "./spendings.js";
-import { API_URL, format, months, request } from "./helpers.js";
+import { format, months, request } from "./helpers.js";
 
 let allTransactionsPresent = false;
 let showAllTransactions = false;
@@ -12,7 +12,7 @@ async function changeTrasactionsView() {
     transactionViewControlButton.textContent = `View ${showAllTransactions ? "Few" : "All"} Transactions`;
 
     if (!allTransactionsPresent) {
-        window.user.transactions = await request(`${API_URL}/users/transactions`, {
+        window.user.transactions = await request(`${import.meta.env.API_URL}/users/transactions`, {
             method: 'GET',
             credentials: "include"
         });

@@ -1,4 +1,4 @@
-import { API_URL, format } from "./helpers.js";
+import { format } from "./helpers.js";
 
 const balanceElement = document.getElementById("total-balance");
 const addFundsButton = document.getElementById("add-funds-btn");
@@ -19,7 +19,7 @@ export function greet() {
 }
 
 async function logout() {
-    const res = await fetch(`${API_URL}/users/logout`, {
+    const res = await fetch(`${import.meta.env.API_URL}/users/logout`, {
         method: "POST",
         credentials: "include"
     });

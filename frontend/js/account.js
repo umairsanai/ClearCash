@@ -1,4 +1,4 @@
-import { API_URL, request, format, fetchUser } from "./helpers.js";
+import { request, format, fetchUser } from "./helpers.js";
 import { showBalance } from "./user.js";
 import { updatePockets } from "./pockets.js";
 
@@ -64,7 +64,7 @@ function getRecipients() {
         return;
     }
     findUserTimeoutID = setTimeout(async () => {
-        matchingContacts = await request(`${API_URL}/users/find?search=${sendMoneyRecipeintIDInput.value}`, {
+        matchingContacts = await request(`${import.meta.env.API_URL}/users/find?search=${sendMoneyRecipeintIDInput.value}`, {
             method: "GET",
             credentials: "include"
         });
@@ -131,7 +131,7 @@ async function sendMoney() {
 
     try {
         
-        await request(`${API_URL}/users/send`, {
+        await request(`${import.meta.env.API_URL}/users/send`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

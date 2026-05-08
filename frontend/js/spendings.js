@@ -1,4 +1,4 @@
-import { months, fetchUser, capitalize, format, request, API_URL, formatDate } from "./helpers.js";
+import { months, fetchUser, capitalize, format, request, formatDate } from "./helpers.js";
 
 const DAY = 86400000;
 
@@ -30,7 +30,7 @@ export function updateDates() {
 }
 
 export async function updateSpendings() {
-    window.user.spendings = await request(`${API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
+    window.user.spendings = await request(`${import.meta.env.API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
         method: 'GET',
         credentials: "include"
     });

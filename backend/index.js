@@ -4,7 +4,9 @@ dotenv.config({path: ".env"});
 import app from "./app.js";
 import { initialize, gracefulShutdown } from "./helpers.js";
 
-const server = app.listen(process.env.PORT || 3000, process.env.SERVER_HOST || "0.0.0.0");
+const server = app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
+    console.log(`Server running on port ${process.env.PORT || 3000}.....`);    
+});
 
 initialize();
 
