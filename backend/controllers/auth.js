@@ -14,7 +14,7 @@ const signJwtToken = (email, username) => {
 const signTokenAndSetInCookie = (email, username, res) => {
     res.cookie("clearcash-login-token", signJwtToken(email, username), {
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
         path: "/api",
         maxAge: 7 * 24 * 60 * 60 * 1000,      // 7 days
         secure: process.env.MODE === "prod"
