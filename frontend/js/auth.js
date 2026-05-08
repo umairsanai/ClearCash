@@ -173,9 +173,9 @@ authForm.addEventListener("submit", async (event) => {
         await validateSignup();
 
         setMessage("Looks good. Redirecting...", "success");
-        // setTimeout(() => {
-        //     window.location.href = "index.html";
-        // }, 5000);
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 5000);
     } catch (error) {
         setMessage(error.message, "error");
     }
