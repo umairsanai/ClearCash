@@ -4,6 +4,7 @@ export const INT_MAX = 2147483647;
 
 export const wait = (seconds) => new Promise((res) => setTimeout(res, seconds*1000));
 
+export const isInteger = (num) => Number.isInteger(num);
 export const isString = (str) => Object.prototype.toString.call(str) === '[object String]' && (str instanceof String || typeof str === 'string');
 
 export function formatDate(date) {

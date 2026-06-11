@@ -8,6 +8,7 @@ import hpp from "hpp-clean";
 import helmet from "helmet";
 import userRouter from "./routes/userRouter.js";
 import pocketRouter from "./routes/pocketRouter.js";
+import notificationRouter from "./routes/notificationRouter.js";
 import { errorMiddleware } from "./error.js";
 import pool from "./database.js";
 
@@ -42,7 +43,7 @@ app.use(rateLimit({
 // ROUTERS
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/pockets", pocketRouter);
-
+app.use("/api/v1/notifications", notificationRouter);
 
 app.use(errorMiddleware);
 

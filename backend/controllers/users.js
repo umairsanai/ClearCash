@@ -1,6 +1,7 @@
 import pool from "../database.js";
 import { AppError, handleAsyncError } from "../error.js";
 import { formatDate } from "../helpers.js";
+import { fetchCurrentMonthNotifications } from "./notification.js";
 
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
@@ -13,10 +14,11 @@ export const getMe = handleAsyncError(async (req, res, next) => {
         username: req.user.username,
         total_balance: 0
     };
-    user.pockets = await getPockets(req.user.user_id);
+    user.pockets = await fetchAllPockets(req.user.user_id);
     user.total_balance = user.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
-    user.spendings = await getSpendings(req.user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
-    user.transactions = await getTransactions(req.user.user_id, 5);
+    user.spendings = await fetchSpendings(req.user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
+    user.transactions = await fetchCurrentMonthTransactions(req.user.user_id, 5);
+    user.notifications = await fetchCurrentMonthNotifications(req.user.user_id);
 
     res.status(200).json({
         status: "success",
@@ -65,7 +67,7 @@ export const sendMoney = handleAsyncError(async (req, res, next) => {
 });
 
 export const getCurrentMonthTransactions = handleAsyncError(async (req, res, next) => {
-    const data = await getTransactions(req.user.user_id, 1000);
+    const data = await fetchCurrentMonthTransactions(req.user.user_id, 1000);
     res.status(200).json({
         status: "success",
         data,        
@@ -77,7 +79,7 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
     // users/weekly-spendings?start_date=2026-04-20&end_date=2026-04-26
 
     const {start_date, end_date} = req.query;
-    const spendings = await getSpendings(req.user.user_id, start_date, end_date);
+    const spendings = await fetchSpendings(req.user.user_id, start_date, end_date);
     res.status(200).json({
         status: "success",
         data: spendings
@@ -85,7 +87,7 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
 });
 
 export const getAllUserPockets = handleAsyncError(async (req, res, next) => {
-    const pockets = await getPockets(req.user.user_id);
+    const pockets = await fetchAllPockets(req.user.user_id);
     res.status(200).json({
         status: "success",
         data: pockets
@@ -133,15 +135,15 @@ export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, ne
     });
 });
 
-async function getSpendings(user_id, start_date, end_date) {
+async function fetchSpendings(user_id, start_date, end_date) {
     return (await pool.query("SELECT pocket_name, spending::INT FROM (SELECT sender_pocket_id AS pocket_id, SUM(amount) AS spending FROM transactions WHERE sender_user_id=$1 AND transaction_date >= $2 AND transaction_date <= $3 GROUP BY sender_pocket_id) AS sub_table INNER JOIN pockets ON sub_table.pocket_id=pockets.pocket_id", [user_id, start_date, end_date])).rows;
 }
 
-async function getTransactions(user_id, limit=500) {
+async function fetchCurrentMonthTransactions(user_id, limit=500) {
     return (await pool.query("SELECT transaction_date::TEXT, CASE WHEN transactions.sender_user_id=$1 THEN pocket_name ELSE 'Main' END AS pocket_name, CASE WHEN transactions.sender_user_id=$1 THEN -amount ELSE amount END AS transaction_amount, CASE WHEN transactions.sender_user_id=$1 THEN CONCAT('Send Money to ', recipient.name) ELSE CONCAT('Received Money from ', sender.name) END AS transaction_message FROM transactions INNER JOIN users recipient ON recipient.user_id = transactions.recipient_user_id INNER JOIN users sender ON sender.user_id = transactions.sender_user_id INNER JOIN pockets ON pockets.pocket_id=transactions.sender_pocket_id WHERE (transactions.sender_user_id=$1 OR transactions.recipient_user_id=$1) AND DATE_TRUNC('month', transactions.transaction_date)::DATE = DATE_TRUNC('month', CURRENT_DATE)::DATE ORDER BY transactions.transaction_date LIMIT $2", [user_id, limit])).rows;
 }
 
-async function getPockets(user_id) {
+async function fetchAllPockets(user_id) {
     let pockets = (await pool.query("SELECT pocket_id, pocket_name, pocket_balance, pocket_limit, color FROM pockets WHERE user_id=$1", [user_id])).rows;
     pockets = pockets.map(pocket => {
         if (pocket.pocket_name === "Main") 

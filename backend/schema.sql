@@ -28,3 +28,11 @@ CREATE TABLE transactions (
     amount INT NOT NULL CHECK(amount >= 0),
     transaction_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
+
+CREATE TABLE notifications (
+    notification_id SERIAL PRIMARY KEY,
+    user_id INT NOT NULL REFERENCES users(user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    message VARCHAR(255) NOT NULL,
+    is_read SMALLINT NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
