@@ -13,7 +13,7 @@ import pool from "./database.js";
 
 const app = express();
 
-app.use(cors({origin: ['https://clearcash-orpin.vercel.app', "http://127.0.0.1:4173", "http://localhost:4173"], credentials: true}));
+app.use(cors({origin: ['https://clearcash-orpin.vercel.app', 'https://www.clearcash-orpin.vercel.app', "http://127.0.0.1:4173", "http://localhost:4173"], credentials: true}));
 
 // BODY PARSING
 app.set('query parser', 'extended');    
@@ -25,13 +25,12 @@ app.use(express.urlencoded({extended: true, limit:'10kb'}));
 app.use(morgan("tiny"));
 
 // SECURITY
-// TODO: SQL INJECTION REMAINS
 app.use([xss(), helmet(), hpp({ whitelist: [] })]);
 
 // Rate limiting
 app.use(rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	limit: 1000,
+	windowMs: 1 * 60 * 1000, // 1 minute
+	limit: 60,
     message: {
         status: "fail",
         statusCode: 429,
@@ -43,7 +42,6 @@ app.use(rateLimit({
 // ROUTERS
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/pockets", pocketRouter);
-
 
 
 app.use(errorMiddleware);

@@ -12,7 +12,7 @@ async function changeTrasactionsView() {
     transactionViewControlButton.textContent = `View ${showAllTransactions ? "Few" : "All"} Transactions`;
 
     if (!allTransactionsPresent) {
-        window.user.transactions = await request(`${import.meta.env.API_URL}/users/transactions`, {
+        window.user.transactions = await request(`${import.meta.env.VITE_API_URL}/users/transactions`, {
             method: 'GET',
             credentials: "include"
         });
