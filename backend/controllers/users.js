@@ -48,7 +48,7 @@ export const sendMoney = handleAsyncError(async (req, res, next) => {
         return next(new AppError("Sorry! You have insufficient funds.", 400));
     
     // Check if recipient exists.
-    const recipient_pocket = (await pool.query("SELECT pocket_id FROM pockets WHERE user_id=$1 AND pocket_name='Main'", [recipient_user_id])).rows[0];
+    const recipient_pocket = (await pool.query("SELECT pockets.pocket_id, users.name AS recipient_name FROM pockets INNER JOIN users ON users.user_id = pockets.user_id WHERE pockets.user_id=$1 AND pockets.pocket_name='Main'", [recipient_user_id])).rows[0];
 
     if (!recipient_pocket)
         return next (new AppError("The user you're trying to send money to, doesn't exist!", 400));
@@ -57,9 +57,10 @@ export const sendMoney = handleAsyncError(async (req, res, next) => {
         1. Deduct funds from sender. 
         2. Transfer funds in Main pocket of the recipient.
         3. Create transaction record.        
+        4. Send notification to both receipient and user.
     */
 
-    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance=pocket_balance-${amount} WHERE user_id=${req.user.user_id} AND pocket_id=${sender_pocket_id}; UPDATE pockets SET pocket_balance=pocket_balance+${amount} WHERE user_id=${recipient_user_id} AND pocket_id=${recipient_pocket.pocket_id}; INSERT INTO transactions(sender_user_id, recipient_user_id, sender_pocket_id, amount) VALUES (${req.user.user_id}, ${recipient_user_id}, ${sender_pocket_id}, ${amount}); COMMIT`));
+    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance=pocket_balance-${amount} WHERE user_id=${req.user.user_id} AND pocket_id=${sender_pocket_id}; UPDATE pockets SET pocket_balance=pocket_balance+${amount} WHERE user_id=${recipient_user_id} AND pocket_id=${recipient_pocket.pocket_id}; INSERT INTO transactions(sender_user_id, recipient_user_id, sender_pocket_id, amount) VALUES (${req.user.user_id}, ${recipient_user_id}, ${sender_pocket_id}, ${amount}); INSERT INTO notifications (user_id, message) VALUES (${req.user.user_id}, 'Money Sent to ${recipient_pocket.recipient_name}: Rs. ${amount}'), (${recipient_user_id}, 'Money Received From ${req.user.name}: Rs. ${amount}'); COMMIT`));
 
     res.status(200).json({
         status: "success"
@@ -86,14 +87,6 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
     });    
 });
 
-export const getAllUserPockets = handleAsyncError(async (req, res, next) => {
-    const pockets = await fetchAllPockets(req.user.user_id);
-    res.status(200).json({
-        status: "success",
-        data: pockets
-    });
-});
-
 export const findRecipient = handleAsyncError(async (req, res, next) => {
     const search = req.query?.search;
     const recipients = (await pool.query(`SELECT user_id, name, username, phone FROM users WHERE phone ILIKE '${`%${search}%`}' OR name ILIKE '${`%${search}%`}' OR username ILIKE '${`%${search}%@clearcash`}'`)).rows;
@@ -111,7 +104,7 @@ export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, ne
         return next(new AppError("Insufficient or Incorrect Query Data!", 400));
 
     // Do both pockets belong to logged in user?
-    const pockets = (await pool.query("SELECT pocket_id, pocket_balance, pocket_limit FROM pockets WHERE pocket_id = ANY($2) AND user_id=$1", [req.user.user_id, [sender_pocket, receiver_pocket]])).rows;
+    const pockets = (await pool.query("SELECT pocket_id, pocket_name, pocket_balance, pocket_limit FROM pockets WHERE pocket_id = ANY($2) AND user_id=$1", [req.user.user_id, [sender_pocket, receiver_pocket]])).rows;
     if (pockets.length !== 2) 
         return next(new AppError("Incorrect Pocket(s)!", 400));
 
@@ -127,9 +120,8 @@ export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, ne
         return next(new AppError("The pocket you're sending to, has not enough room left.", 400));
 
     // Transfer (With No Transaction Record)
-    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance = pocket_balance - ${amount} WHERE pocket_id = ${sender_pocket.pocket_id}; UPDATE pockets SET pocket_balance = pocket_balance + ${amount} WHERE pocket_id = ${receiver_pocket.pocket_id}; COMMIT`))
+    (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance = pocket_balance - ${amount} WHERE pocket_id = ${sender_pocket.pocket_id}; UPDATE pockets SET pocket_balance = pocket_balance + ${amount} WHERE pocket_id = ${receiver_pocket.pocket_id}; INSERT INTO notifications (user_id, message) VALUES (${req.user.user_id}, 'Rs. ${amount} transferred from ${sender_pocket.pocket_name} Pocket to ${receiver_pocket.pocket_name} Pocket'); COMMIT`))
 
-    // Response.
     res.status(200).json({
         status: "success"
     });
@@ -140,15 +132,5 @@ async function fetchSpendings(user_id, start_date, end_date) {
 }
 
 async function fetchCurrentMonthTransactions(user_id, limit=500) {
-    return (await pool.query("SELECT transaction_date::TEXT, CASE WHEN transactions.sender_user_id=$1 THEN pocket_name ELSE 'Main' END AS pocket_name, CASE WHEN transactions.sender_user_id=$1 THEN -amount ELSE amount END AS transaction_amount, CASE WHEN transactions.sender_user_id=$1 THEN CONCAT('Send Money to ', recipient.name) ELSE CONCAT('Received Money from ', sender.name) END AS transaction_message FROM transactions INNER JOIN users recipient ON recipient.user_id = transactions.recipient_user_id INNER JOIN users sender ON sender.user_id = transactions.sender_user_id INNER JOIN pockets ON pockets.pocket_id=transactions.sender_pocket_id WHERE (transactions.sender_user_id=$1 OR transactions.recipient_user_id=$1) AND DATE_TRUNC('month', transactions.transaction_date)::DATE = DATE_TRUNC('month', CURRENT_DATE)::DATE ORDER BY transactions.transaction_date LIMIT $2", [user_id, limit])).rows;
-}
-
-async function fetchAllPockets(user_id) {
-    let pockets = (await pool.query("SELECT pocket_id, pocket_name, pocket_balance, pocket_limit, color FROM pockets WHERE user_id=$1", [user_id])).rows;
-    pockets = pockets.map(pocket => {
-        if (pocket.pocket_name === "Main") 
-            delete pocket.pocket_limit;
-        return pocket;
-    });
-    return pockets;
+    return (await pool.query("SELECT transaction_date::TEXT, CASE WHEN transactions.sender_user_id=$1 THEN pocket_name ELSE 'Main' END AS pocket_name, CASE WHEN transactions.sender_user_id=$1 THEN -amount ELSE amount END AS transaction_amount, CASE WHEN transactions.sender_user_id=$1 THEN CONCAT('Send Money to ', recipient.name) ELSE CONCAT('Received Money from ', sender.name) END AS transaction_message FROM transactions INNER JOIN users recipient ON recipient.user_id = transactions.recipient_user_id INNER JOIN users sender ON sender.user_id = transactions.sender_user_id INNER JOIN pockets ON pockets.pocket_id=transactions.sender_pocket_id WHERE (transactions.sender_user_id=$1 OR transactions.recipient_user_id=$1) AND DATE_TRUNC('month', transactions.transaction_date)::DATE = DATE_TRUNC('month', CURRENT_DATE)::DATE ORDER BY transactions.transaction_date DESC, transactions.transaction_id DESC LIMIT $2", [user_id, limit])).rows;
 }

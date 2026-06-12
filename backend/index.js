@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config({path: ".env"});
+console.clear();
 
 import app from "./app.js";
 import { initialize, gracefulShutdown } from "./helpers.js";
