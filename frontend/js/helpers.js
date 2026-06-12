@@ -20,9 +20,12 @@ export async function fetchUser() {
         throw error;
     }
 };
+
+// TODO: Test this.
+
 export async function fetchPockets() {
     try {
-        let res = await fetch(`${import.meta.env.VITE_API_URL}/users/pockets`, {
+        let res = await fetch(`${import.meta.env.VITE_API_URL}/pockets/`, {
             credentials: "include"
         });        
         const ok = res.ok;
