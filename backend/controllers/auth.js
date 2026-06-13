@@ -2,8 +2,7 @@ import { AppError, handleAsyncError } from "../error.js";
 import pool from "../database.js";
 import argon from "argon2";
 import jwt from "jsonwebtoken";
-import { INT_MAX } from "../helpers.js";
-import { fetchPockets } from "./helpers.js";
+import { INT_MAX } from "./helpers.js";
 
 const signJwtToken = (email, username) => {
     return jwt.sign({ email, username }, process.env.JWT_SIGN_SECRET, {
