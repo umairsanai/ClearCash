@@ -21,15 +21,39 @@ let currentMode = "login";
 
 
 
+function passwordFieldMarkup(id, name, placeholder) {
+    return `
+    <div class="form-group">
+        <label for="${id}">Password</label>
+        <div class="password-field">
+            <input id="${id}" name="${name}" type="password" placeholder="${placeholder}" required>
+            <button type="button" class="password-toggle" data-password-toggle >
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+`;
+}
+
+function bindPasswordToggle() {
+    const toggleBtn = authFields.querySelector("[data-password-toggle]");
+    const passwordInput = authFields.querySelector('input[type="password"]');
+
+    toggleBtn.addEventListener("click", () => {
+        const isHidden = passwordInput.type === "password";
+        passwordInput.type = isHidden ? "text" : "password";
+        toggleBtn.querySelector("i").className = isHidden ? "fas fa-eye-slash" : "fas fa-eye";
+    });
+}
+
+
+
 const loginFieldsMarkup = `
     <div class="form-group">
         <label for="login-username">Username</label>
         <input id="login-username" name="username" type="text" autocomplete="username" placeholder="Username" required>
     </div>
-    <div class="form-group">
-        <label for="login-password">Password</label>
-        <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Enter your password" required>
-    </div>
+    ${passwordFieldMarkup("login-password", "password", "Enter your password")}
 `;
 
 const signupFieldsMarkup = `
@@ -49,10 +73,7 @@ const signupFieldsMarkup = `
         <label for="signup-phone">Phone number</label>
         <input id="signup-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0300 1234567" required>
     </div>
-    <div class="form-group">
-        <label for="signup-password">Password</label>
-        <input id="signup-password" name="password" type="password" autocomplete="new-password" placeholder="Create a password" required>
-    </div>
+    ${passwordFieldMarkup("signup-password", "password", "Create a password")}
 `;
 
 function setMessage(message, type) {
@@ -69,6 +90,7 @@ function renderLogin() {
     currentMode = "login";
     authFields.innerHTML = loginFieldsMarkup;
     authFields.querySelector("#login-username").focus();
+    bindPasswordToggle();
 
     authTitle.textContent = "Login";
     authSubtitle.textContent = "Use your ClearCash username and password.";
@@ -83,6 +105,7 @@ function renderSignup() {
     currentMode = "signup";
     authFields.innerHTML = signupFieldsMarkup;
     authFields.querySelector("#signup-name").focus();
+    bindPasswordToggle();
 
     authTitle.textContent = "Create account";
     authSubtitle.textContent = "Set up your ClearCash account in minutes.";

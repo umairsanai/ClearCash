@@ -155,6 +155,10 @@ input {
     gap: 0.4rem;
 }
 
+.password-field {
+    position: relative;
+}
+
 label {
     font-size: 0.9rem;
     color: var(--text-muted);
@@ -177,6 +181,30 @@ input:focus {
     outline: none;
     border-color: rgba(0, 180, 219, 0.6);
     box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.15);
+}
+
+.password-field input {
+    width: 100%;
+    padding-right: 2.75rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.password-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(8, 160, 195, 0.2);
+    border-radius: 999px;
 }
 
 .primary-btn {
