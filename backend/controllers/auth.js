@@ -121,10 +121,10 @@ export const login = handleAsyncError(async (req, res, next) => {
 });
 
 export const logout = (req, res, next) => {
-    res.cookie("clearcash-login-token", "", {
+    res.clearCookie("clearcash-login-token", {
         sameSite: "none",
         path: "/",
-        maxAge: 0
+        secure: process.env.MODE === "prod"
     });
     res.status(200).json({
         status: "success",
