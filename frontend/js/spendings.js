@@ -10,6 +10,14 @@ let spendingsList = document.getElementById("spending-list-container");
 let arrowsContainer = document.querySelector(".spending-nav");
 let totalExpense = 0;
 
+
+
+/* ===============    Functions    =============== */
+
+
+
+
+
 async function changeWeek(e) {
     if (e.target.closest("#prev-week-btn")) {            
         currDate -= 7*DAY;      
@@ -29,11 +37,13 @@ export function updateDates() {
     dateContainer.textContent = `${months[startOfWeek.getUTCMonth()]} ${startOfWeek.getUTCDate()} - ${months[endOfWeek.getUTCMonth()]} ${endOfWeek.getUTCDate()}`;
 }
 
-export async function updateSpendings() {
-    window.user.spendings = await request(`${import.meta.env.VITE_API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
-        method: 'GET',
-        credentials: "include"
-    });
+export async function updateSpendings(makeRequest = true) {
+    if (makeRequest) {
+        window.user.spendings = await request(`${import.meta.env.VITE_API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
+            method: 'GET',
+            credentials: "include"
+        });
+    }
     totalExpense = window.user.spendings.reduce((sum, elem) => sum + elem.spending, 0);
 }
 
@@ -63,5 +73,13 @@ export function showSpendings() {
         spendingsList.insertAdjacentHTML("beforeend", `<div class="no-spendings-message"> No spendings this week! </div>`);
     }
 }
+
+
+
+
+/* ===============    Event Listeners    =============== */
+
+
+
 
 arrowsContainer.addEventListener("click", changeWeek);

@@ -1,3 +1,5 @@
+import { closeNotifications } from "./notifications.js";
+
 const calculatorContainer = document.getElementById("calculator-panel");
 const calculatorIcon = document.getElementById("calculator-toggle-btn");
 const calculatorCloseButton = document.getElementById("close-calculator-btn");
@@ -14,11 +16,12 @@ let expression = "";
     
 
 function showCalculator() {
+    closeNotifications();
     calculatorContainer.style.width = "29vw";
     calculatorContainer.style.opacity = "1";
     calculatorIcon.classList.add("hidden");
 }
-function hideCalculator() {
+export function hideCalculator() {
     calculatorContainer.style.width = "0vw";
     calculatorContainer.style.opacity = "0";
     calculatorIcon.classList.remove("hidden");

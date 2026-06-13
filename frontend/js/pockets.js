@@ -1,4 +1,5 @@
 import { convertInSnakeCase, fetchUser, request, format, fetchPockets } from "./helpers.js";
+import { renderNotifications } from "./notifications.js";
 
 let pocketInEdit = null
 const pocketsContainer = document.querySelector(".pocket-grid");
@@ -118,7 +119,9 @@ async function confirmTransferToPocket(e) {
             credentials: "include"
         });
         window.user.pockets = await fetchPockets();
+        window.user.notifications = await fetchNotifications();
         updatePockets();
+        renderNotifications();
 
     } catch (error) {
         alert("Couldn't transfer money");
@@ -158,7 +161,9 @@ async function deletePocket(e) {
             credentials: "include"
         });
         window.user.pockets = await fetchPockets();
+        window.user.notifications = await fetchNotifications();
         updatePockets();        
+        renderNotifications();
 
     } catch (error) {
         alert("Couldn't delete the pocket!", 400);
@@ -197,7 +202,9 @@ async function submitEditPocketForm(e) {
             credentials: "include"
         })
         window.user.pockets = await fetchPockets(); 
+        window.user.notifications = await fetchNotifications();
         updatePockets();
+        renderNotifications();
  
     } catch (error) {
         alert("Error: Couldn't Edit Pocket.");
@@ -252,8 +259,10 @@ async function createNewPocket(e) {
             credentials: "include"
         });
         window.user.pockets.push(newPocket);
+        window.user.notifications = await fetchNotifications();
         updatePockets();
-
+        renderNotifications();
+        
     } catch (error) {
         alert("Error: Couldn't Add new Pocket!");
         throw error;

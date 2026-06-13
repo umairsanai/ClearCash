@@ -1,32 +1,28 @@
 import { updateSpendings, showSpendings } from "./spendings.js";
 import { format, months, request } from "./helpers.js";
 
-let allTransactionsPresent = false;
 let showAllTransactions = false;
 const transactionsList = document.getElementById("transaction-list-container");
 const transactionViewControlButton = document.getElementById("view-all-btn");
 
 
-async function changeTrasactionsView() {
+
+
+/* ===============    Functions    =============== */
+
+
+
+
+function changeTrasactionsView() {
     showAllTransactions = !showAllTransactions;
     transactionViewControlButton.textContent = `View ${showAllTransactions ? "Few" : "All"} Transactions`;
-
-    if (!allTransactionsPresent) {
-        window.user.transactions = await request(`${import.meta.env.VITE_API_URL}/users/transactions`, {
-            method: 'GET',
-            credentials: "include"
-        });
-        allTransactionsPresent = true;
-    }
     updateTransactions();
-    updateSpendings();
-    showSpendings();
 }
 
 function appendTransaction(transaction) {
     let color = window.user.pockets.find(pocket => pocket.pocket_name === transaction.pocket_name)?.color?.toLowerCase();
 
-    transactionsList.insertAdjacentHTML("afterbegin", `
+    transactionsList.insertAdjacentHTML("beforeend", `
         <div class="transaction-item">
             <div class="transaction-details">
                 <div class="transaction-icon icon-${color}">
@@ -49,10 +45,18 @@ export function updateTransactions() {
     if (showAllTransactions) {
         window.user.transactions.forEach(transaction => appendTransaction(transaction));
     } else {
-        for (let i = Math.max(0, window.user.transactions.length-4); i < window.user.transactions.length; i++) {
+        for (let i = 0; i < Math.min(4, window.user.transactions.length); i++) {
             appendTransaction(window.user.transactions[i]);
         }
     }
 }
+
+
+
+
+/* ===============    Event Listeners    =============== */
+
+
+
 
 transactionViewControlButton.addEventListener("click", changeTrasactionsView);

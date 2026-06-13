@@ -1,6 +1,9 @@
 import { request, format, fetchUser } from "./helpers.js";
 import { showBalance } from "./user.js";
 import { updatePockets } from "./pockets.js";
+import { renderNotifications } from "./notifications.js";
+import { updateTransactions } from "./transactions.js";
+import { showSpendings, updateSpendings } from "./spendings.js";
 
 const sendMoneyButton = document.getElementById("send-money-btn");
 const sendMoneyContainer = document.getElementById("send-money-modal");
@@ -129,6 +132,8 @@ async function sendMoney() {
     if (!recipientID || !recipientName || !sendingAmount)
         return;
 
+    sendMoneyConfirmSendButton.disabled = true;
+
     try {
         
         await request(`${import.meta.env.VITE_API_URL}/users/send`, {
@@ -144,13 +149,19 @@ async function sendMoney() {
             credentials: "include"
         });
         window.user = await fetchUser();
-
+        
     } catch (error) {
         alert("Error: Transaction Failed - Couldn't Send Money!");
     }
     
+    sendMoneyConfirmSendButton.disabled = false; 
+
+    renderNotifications();    
     showBalance();
     updatePockets();
+    updateSpendings(false);
+    showSpendings();
+    updateTransactions();
     closeSendMoneyForm();
 }
 

@@ -1,7 +1,17 @@
 export const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export async function request(url, options) {
-    return (await (await fetch(url, options)).json()).data;
+    let res = await fetch(url, options);
+
+    if (!res.ok) {
+        const error = await res.json();
+        console.error("Error: ", error.message || "Request failed");
+        throw new Error(error.message || "Request failed");
+    }
+
+    res = await res.json();
+
+    return res.data;
 }
 
 export async function fetchUser() {
@@ -21,8 +31,6 @@ export async function fetchUser() {
     }
 };
 
-// TODO: Test this.
-
 export async function fetchPockets() {
     try {
         let res = await fetch(`${import.meta.env.VITE_API_URL}/pockets/`, {
@@ -32,6 +40,23 @@ export async function fetchPockets() {
         res = await res.json();
         if (!ok) {
             throw new Error(res.message || "Couldn't fetch pockets");
+        }
+        return res.data;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export async function fetchNotifications() {
+    try {
+        let res = await fetch(`${import.meta.env.VITE_API_URL}/notifications/`, {
+            credentials: "include"
+        });        
+        const ok = res.ok;
+        res = await res.json();
+        if (!ok) {
+            throw new Error(res.message || "Couldn't fetch notifications");
         }
         return res.data;
     } catch (error) {
@@ -62,4 +87,10 @@ export function formatDate(date) {
 
 export function convertInSnakeCase(name) {
     return name.replaceAll(" ", "_").toLowerCase();
-} 
+}
+
+export function escapeHtml(value) {
+    return String(value ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+}
+
+export const wait = (seconds) => new Promise((res) => setTimeout(res, seconds*1000));

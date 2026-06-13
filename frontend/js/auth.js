@@ -12,6 +12,15 @@ const formMessage = document.getElementById("form-message");
 
 let currentMode = "login";
 
+
+
+
+/* ===============    Functions    =============== */
+
+
+
+
+
 const loginFieldsMarkup = `
     <div class="form-group">
         <label for="login-username">Username</label>
@@ -159,6 +168,15 @@ async function validateSignup() {
     }        
     window.user = res.data;
 }
+
+
+
+
+/* ===============    Event Listeners    =============== */
+
+
+
+
 
 switchBtn.addEventListener("click", () => {
     currentMode === "login" ? renderSignup() : renderLogin();

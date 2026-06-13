@@ -3,17 +3,18 @@ import { greet, showBalance } from "./user.js";
 import { updatePockets } from "./pockets.js";
 import { updateDates, updateSpendings, showSpendings } from "./spendings.js";
 import { updateTransactions } from "./transactions.js";
+import { initializeNotifications } from "./notifications.js";
 import "./calculator.js";
-import "./notifications.js"
 import "./account.js"
 
 try {
     window.user = await fetchUser();
+    initializeNotifications();
     greet();
     showBalance();
     updatePockets();
     updateDates();
-    updateSpendings();
+    updateSpendings(false);
     showSpendings();
     updateTransactions();
 } catch (error) {

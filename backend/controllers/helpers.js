@@ -1,4 +1,4 @@
-import pool from "./database.js";
+import pool from "../database.js";
 
 export const INT_MAX = 2147483647;
 
@@ -31,4 +31,4 @@ export const gracefulShutdown = (server) => {
             process.exit(-1);
         }
     }
-}    
+}

@@ -8,6 +8,13 @@ const logoutButton = document.getElementById("logout-btn");
 
 let balanceVisible = true;
 
+
+
+/* ===============    Functions    =============== */
+
+
+
+
 export function showBalance(toggle = false) {
     if (toggle)
         balanceVisible = !balanceVisible;
@@ -27,6 +34,14 @@ async function logout() {
         window.location.href = "auth.html";
     }
 }
+
+
+
+
+/* ===============    Event Listeners    =============== */
+
+
+
 
 logoutButton.addEventListener("click", logout);
 addFundsButton.addEventListener("click", () => alert("Can't Add Funds!"));
