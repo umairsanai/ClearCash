@@ -34,7 +34,8 @@ const notificationTypes = [
 ]
 
 function formatNotificationTime(createdAt) {
-    const secondsAgo = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000);    
+    const timezoneOffsetMilliseconds = new Date(createdAt).getTimezoneOffset() * 60 * 1000;
+    const secondsAgo = Math.floor((Date.now() - (new Date(createdAt).getTime() + timezoneOffsetMilliseconds)) / 1000);    
     const minutesAgo = Math.floor(secondsAgo / 60);
     const hoursAgo = Math.floor(minutesAgo / 60);
     const daysAgo = Math.floor(hoursAgo / 24);
