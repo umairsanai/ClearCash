@@ -645,6 +645,27 @@ input::-webkit-inner-spin-button {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.transaction-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.transaction-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 180, 219, 0.4);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.transaction-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 180, 219, 0.6);
 }
 .transaction-item {
     display: flex;

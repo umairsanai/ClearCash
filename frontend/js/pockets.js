@@ -1,4 +1,4 @@
-import { convertInSnakeCase, fetchUser, request, format, fetchPockets } from "./helpers.js";
+import { convertInSnakeCase, fetchUser, request, format, fetchPockets, fetchNotifications } from "./helpers.js";
 import { renderNotifications } from "./notifications.js";
 
 let pocketInEdit = null
