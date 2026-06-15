@@ -1,17 +1,22 @@
 export const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export async function request(url, options) {
-    let res = await fetch(url, options);
+    try {
+        let res = await fetch(url, options);
+        const ok = res.ok;
+        
+        if (res.status !== 204)
+            res = await res.json();
 
-    if (!res.ok) {
-        const error = await res.json();
-        console.error("Error: ", error.message || "Request failed");
-        throw new Error(error.message || "Request failed");
+        if (!ok) {
+            console.error("Error: ", res.message || "Request failed");
+            throw new Error(res.message || "Request failed");
+        }    
+
+        return res.data;
+    } catch (error) {
+        throw error;
     }
-
-    res = await res.json();
-
-    return res.data;
 }
 
 export async function fetchUser() {
