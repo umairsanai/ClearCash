@@ -1,5 +1,8 @@
 import { convertInSnakeCase, fetchUser, request, format, fetchPockets, fetchNotifications } from "./helpers.js";
 import { renderNotifications } from "./notifications.js";
+import { calculateTotalWeeklyExpense, showSpendings } from "./spendings.js";
+import { updateTransactions } from "./transactions.js";
+import { showBalance } from "./user.js";
 
 let pocketInEdit = null
 const pocketsContainer = document.querySelector(".pocket-grid");
@@ -106,7 +109,7 @@ async function confirmTransferToPocket(e) {
 
     try {
 
-        await request(`${import.meta.env.VITE_API_URL}/users/transfer-to-pocket`, {
+        const result = await request(`${import.meta.env.VITE_API_URL}/users/transfer-to-pocket`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -118,16 +121,16 @@ async function confirmTransferToPocket(e) {
             }),
             credentials: "include"
         });
-        window.user.pockets = await fetchPockets();
-        window.user.notifications = await fetchNotifications();
-        updatePockets();
-        renderNotifications();
-
+        window.user.pockets = result.pockets;
+        window.user.notifications = result.notifications;
+        
     } catch (error) {
         alert("Couldn't transfer money");
         throw error;
     }
-
+    
+    updatePockets();
+    renderNotifications();
     closeTransferFundsForm();
 }
 
@@ -153,23 +156,24 @@ async function deletePocket(e) {
     const selected_pocket = window.user.pockets.find(pocket => pocket.pocket_name === pocketInEdit);
     const pocket_id = selected_pocket?.pocket_id;
 
-    
     try {
         
-        await fetch(`${import.meta.env.VITE_API_URL}/pockets/delete/${pocket_id}`, {
+        window.user = await request(`${import.meta.env.VITE_API_URL}/pockets/delete/${pocket_id}`, {
             method: 'DELETE',
             credentials: "include"
         });
-        window.user.pockets = await fetchPockets();
-        window.user.notifications = await fetchNotifications();
-        updatePockets();        
-        renderNotifications();
-
+        
     } catch (error) {
         alert("Couldn't delete the pocket!", 400);
         throw error;
     }
-
+    
+    updatePockets();
+    showBalance();
+    calculateTotalWeeklyExpense();
+    showSpendings();
+    updateTransactions();
+    renderNotifications();
     closeEditPocketForm();
 }
 
@@ -181,14 +185,13 @@ async function submitEditPocketForm(e) {
     const new_pocket_name = editPocketNameInput.value;
     const new_pocket_limit = Math.floor(+editPocketBudgetInput.value);
     const new_pocket_color = editPocketColorInput.value;
-    let updatedPocket;
     
     if (!new_pocket_name || !new_pocket_limit || !new_pocket_color) 
         return alert("Please enter full data!");
 
     try {
  
-        updatedPocket = await request(`${import.meta.env.VITE_API_URL}/pockets/update`, {
+        window.user = await request(`${import.meta.env.VITE_API_URL}/pockets/update`, {
             method: "PATCH",
             headers: {
                 'Content-Type': 'application/json'  
@@ -200,17 +203,19 @@ async function submitEditPocketForm(e) {
                 new_pocket_color
             }),
             credentials: "include"
-        })
-        window.user.pockets = await fetchPockets(); 
-        window.user.notifications = await fetchNotifications();
-        updatePockets();
-        renderNotifications();
- 
+        });
+        
     } catch (error) {
         alert("Error: Couldn't Edit Pocket.");
         throw error;
     }
-
+    
+    updatePockets();
+    showBalance();
+    calculateTotalWeeklyExpense();
+    showSpendings();
+    updateTransactions();
+    renderNotifications();
     closeEditPocketForm();
 }
 
@@ -239,14 +244,13 @@ async function createNewPocket(e) {
     const newPocketName = newPocketNameInput.value;
     const newPocketLimit = Math.abs(Number(newPocketLimitInput.value));
     const newPocketColor = newPocketColorInput.value; 
-    let newPocket;
 
     if (!newPocketName || !newPocketLimit || !newPocketColor) 
         return alert("Please enter full details!");
 
     try {
         
-        newPocket = await request(`${import.meta.env.VITE_API_URL}/pockets/create`, {
+        const result = await request(`${import.meta.env.VITE_API_URL}/pockets/create`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'  
@@ -258,16 +262,16 @@ async function createNewPocket(e) {
             }),
             credentials: "include"
         });
-        window.user.pockets.push(newPocket);
-        window.user.notifications = await fetchNotifications();
-        updatePockets();
-        renderNotifications();
+        window.user.pockets.push(result.createdPocket);
+        window.user.notifications = result.notifications;
         
     } catch (error) {
         alert("Error: Couldn't Add new Pocket!");
         throw error;
     }        
-
+    
+    updatePockets();
+    renderNotifications();
     closeNewPocketForm();
 }
 

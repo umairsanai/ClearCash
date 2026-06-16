@@ -7,23 +7,11 @@ import { fetchAllPockets } from "./pockets.js";
 const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
 
 export const getMe = handleAsyncError(async (req, res, next) => {
-
-    const user = {
-        id: req.user.user_id,
-        name: req.user.name,
-        email: req.user.email,
-        username: req.user.username,
-        total_balance: 0
-    };
-    user.pockets = await fetchAllPockets(req.user.user_id);
-    user.total_balance = user.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
-    user.spendings = await fetchSpendings(req.user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
-    user.transactions = await fetchCurrentMonthTransactions(req.user.user_id);
-    user.notifications = await fetchCurrentMonthNotifications(req.user.user_id);
+    const user = await fetchMe(req.user);
 
     res.status(200).json({
         status: "success",
-        data: {user}
+        data: user
     });
 });
 
@@ -62,9 +50,11 @@ export const sendMoney = handleAsyncError(async (req, res, next) => {
     */
 
     (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance=pocket_balance-${amount} WHERE user_id=${req.user.user_id} AND pocket_id=${sender_pocket_id}; UPDATE pockets SET pocket_balance=pocket_balance+${amount} WHERE user_id=${recipient_user_id} AND pocket_id=${recipient_pocket.pocket_id}; INSERT INTO transactions(sender_user_id, recipient_user_id, sender_pocket_id, amount) VALUES (${req.user.user_id}, ${recipient_user_id}, ${sender_pocket_id}, ${amount}); INSERT INTO notifications (user_id, message) VALUES (${req.user.user_id}, 'Money Sent to ${recipient_pocket.recipient_name}: Rs. ${amount}'), (${recipient_user_id}, 'Money Received From ${req.user.name}: Rs. ${amount}'); COMMIT`));
+    const user = await fetchMe(req.user);
 
-    res.status(204).json({
-        status: "success"
+    res.status(200).json({
+        status: "success",
+        data: user
     });
 });
 
@@ -115,8 +105,15 @@ export const transferMoneyToAnotherPocket = handleAsyncError(async (req, res, ne
     // Transfer (With No Transaction Record)
     (await pool.query(`BEGIN; UPDATE pockets SET pocket_balance = pocket_balance - ${amount} WHERE pocket_id = ${sender_pocket.pocket_id}; UPDATE pockets SET pocket_balance = pocket_balance + ${amount} WHERE pocket_id = ${receiver_pocket.pocket_id}; INSERT INTO notifications (user_id, message) VALUES (${req.user.user_id}, 'Rs. ${amount} transferred from ${sender_pocket.pocket_name} Pocket to ${receiver_pocket.pocket_name} Pocket'); COMMIT`))
 
+    const updatedPockets = await fetchAllPockets(req.user.user_id);
+    const notifications = await fetchCurrentMonthNotifications(req.user.user_id);
+
     res.status(200).json({
-        status: "success"
+        status: "success",
+        data: {
+            pockets: updatedPockets,
+            notifications
+        }
     });
 });
 
@@ -124,6 +121,22 @@ async function fetchSpendings(user_id, start_date, end_date) {
     return (await pool.query("SELECT pocket_name, spending::INT FROM (SELECT sender_pocket_id AS pocket_id, SUM(amount) AS spending FROM transactions WHERE sender_user_id=$1 AND transaction_date >= $2 AND transaction_date <= $3 GROUP BY sender_pocket_id) AS sub_table INNER JOIN pockets ON sub_table.pocket_id=pockets.pocket_id", [user_id, start_date, end_date])).rows;
 }
 
-async function fetchCurrentMonthTransactions(user_id) {
+export async function fetchCurrentMonthTransactions(user_id) {
     return (await pool.query("SELECT transaction_date::TEXT, CASE WHEN transactions.sender_user_id=$1 THEN pocket_name ELSE 'Main' END AS pocket_name, CASE WHEN transactions.sender_user_id=$1 THEN -amount ELSE amount END AS transaction_amount, CASE WHEN transactions.sender_user_id=$1 THEN CONCAT('Send Money to ', recipient.name) ELSE CONCAT('Received Money from ', sender.name) END AS transaction_message FROM transactions INNER JOIN users recipient ON recipient.user_id = transactions.recipient_user_id INNER JOIN users sender ON sender.user_id = transactions.sender_user_id INNER JOIN pockets ON pockets.pocket_id=transactions.sender_pocket_id WHERE (transactions.sender_user_id=$1 OR transactions.recipient_user_id=$1) AND DATE_TRUNC('month', transactions.transaction_date)::DATE = DATE_TRUNC('month', CURRENT_DATE)::DATE ORDER BY transactions.transaction_date DESC, transactions.transaction_id DESC", [user_id])).rows;
+}
+
+export async function fetchMe(user) {
+    const me = {
+        id: user.user_id,
+        name: user.name,
+        email: user.email,
+        username: user.username,
+        total_balance: 0
+    };
+    me.pockets = await fetchAllPockets(user.user_id);
+    me.total_balance = me.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
+    me.spendings = await fetchSpendings(user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
+    me.transactions = await fetchCurrentMonthTransactions(user.user_id);
+    me.notifications = await fetchCurrentMonthNotifications(user.user_id);
+    return me;
 }

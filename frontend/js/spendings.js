@@ -36,15 +36,16 @@ async function changeWeek(e) {
 export function updateDates() {
     dateContainer.textContent = `${months[startOfWeek.getUTCMonth()]} ${startOfWeek.getUTCDate()} - ${months[endOfWeek.getUTCMonth()]} ${endOfWeek.getUTCDate()}`;
 }
-
-export async function updateSpendings(makeRequest = true) {
-    if (makeRequest) {
-        window.user.spendings = await request(`${import.meta.env.VITE_API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
-            method: 'GET',
-            credentials: "include"
-        });
-    }
+export function calculateTotalWeeklyExpense() {
     totalExpense = window.user.spendings.reduce((sum, elem) => sum + elem.spending, 0);
+}
+
+export async function updateSpendings() {
+    window.user.spendings = await request(`${import.meta.env.VITE_API_URL}/users/weekly-spendings?start_date=${formatDate(startOfWeek)}&end_date=${formatDate(endOfWeek)}`, {
+        method: 'GET',
+        credentials: "include"
+    });
+    calculateTotalWeeklyExpense();
 }
 
 export function showSpendings() {

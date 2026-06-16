@@ -1,7 +1,7 @@
 import { fetchUser } from "./helpers.js";
 import { greet, showBalance } from "./user.js";
 import { updatePockets } from "./pockets.js";
-import { updateDates, updateSpendings, showSpendings } from "./spendings.js";
+import { updateDates, updateSpendings, showSpendings, calculateTotalWeeklyExpense } from "./spendings.js";
 import { updateTransactions } from "./transactions.js";
 import { initializeNotifications } from "./notifications.js";
 import "./calculator.js";
@@ -14,7 +14,7 @@ try {
     showBalance();
     updatePockets();
     updateDates();
-    updateSpendings(false);
+    calculateTotalWeeklyExpense();
     showSpendings();
     updateTransactions();
 } catch (error) {

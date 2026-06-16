@@ -1,5 +1,7 @@
 import pool from "../database.js";
 import { AppError, handleAsyncError } from "../error.js";
+import { fetchCurrentMonthNotifications } from "./notification.js";
+import { fetchMe, fetchCurrentMonthTransactions } from "./users.js"
 
 export const createPocket = handleAsyncError(async (req, res, next) => {
 
@@ -13,13 +15,18 @@ export const createPocket = handleAsyncError(async (req, res, next) => {
     if ((await pool.query("SELECT pocket_id FROM pockets WHERE user_id=$1 AND pocket_name=$2", [req.user.user_id, pocket_name])).rows.length)
         return next(new AppError("You have already a pocket with that name. Please provide a unique name", 400));
 
-    const data = (await pool.query("INSERT INTO pockets (user_id, pocket_name, pocket_limit, color) VALUES ($1, $2, $3, $4) RETURNING pocket_id, pocket_name, pocket_balance, pocket_limit, color", [req.user.user_id, pocket_name, pocket_limit, color])).rows[0];
+    const createdPocket = (await pool.query("INSERT INTO pockets (user_id, pocket_name, pocket_limit, color) VALUES ($1, $2, $3, $4) RETURNING pocket_id, pocket_name, pocket_balance, pocket_limit, color", [req.user.user_id, pocket_name, pocket_limit, color])).rows[0];
     
     await pool.query("INSERT INTO notifications (user_id, message) VALUES ($1, $2)", [req.user.user_id, `New Pocket Created: ${pocket_name}`]);
 
+    const notifications = await fetchCurrentMonthNotifications(req.user.user_id);
+
     res.status(200).json({
         status: "success",
-        data
+        data: {
+            createdPocket,
+            notifications
+        }
     });
 });
 
@@ -46,13 +53,15 @@ export const udpatePocket = handleAsyncError(async (req, res, next) => {
     if (pocket.pocket_balance > new_pocket_limit) 
         return next(new AppError("You can't have Pocket Limit less than your current Pocket Balance.", 400));
 
-    const new_pocket = (await pool.query("UPDATE pockets SET pocket_name=$3, pocket_limit=$4, color=$5 WHERE user_id=$1 AND pocket_name=$2 RETURNING pocket_id, pocket_name, pocket_balance, pocket_limit, color", [req.user.user_id, old_pocket_name, new_pocket_name, new_pocket_limit, new_pocket_color])).rows[0];
+    const newPocket = (await pool.query("UPDATE pockets SET pocket_name=$3, pocket_limit=$4, color=$5 WHERE user_id=$1 AND pocket_name=$2 RETURNING pocket_name", [req.user.user_id, old_pocket_name, new_pocket_name, new_pocket_limit, new_pocket_color])).rows[0];
 
-    await pool.query("INSERT INTO notifications (user_id, message) VALUES ($1, $2)", [req.user.user_id, `${new_pocket.pocket_name} Pocket Updated!`]);
+    await pool.query("INSERT INTO notifications (user_id, message) VALUES ($1, $2)", [req.user.user_id, `${newPocket.pocket_name} Pocket Updated!`]);
+
+    const user = await fetchMe(req.user);
 
     res.status(200).json({
         status: "success",
-        data: new_pocket
+        data: user
     });
 });
 
@@ -80,9 +89,12 @@ export const deletePocket = handleAsyncError(async (req, res, next) => {
         await pool.query("ROLLBACK");
         return next(new AppError("Couldn't Delete Pocket.", 400));
     }
+
+    const user  = await fetchMe(req.user);
     
-    res.status(204).json({
-        status: "success"
+    res.status(200).json({
+        status: "success",
+        data: user
     });
 });
 

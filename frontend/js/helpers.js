@@ -29,7 +29,7 @@ export async function fetchUser() {
         if (!ok) {
             throw new Error(res.message || "Couldn't fetch user");
         }
-        return res.data.user;
+        return res.data;
     } catch (error) {
         console.error(error);
         throw error;
