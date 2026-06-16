@@ -18,6 +18,7 @@ export function formatDate(date) {
 export const initialize = () => {
     process.env.MODE = process.env.MODE.trim();
 }
+
 export const formatColumnName = (name) => name.replaceAll(" ", "_").toLowerCase();
 
 export const gracefulShutdown = (server) => {
@@ -31,4 +32,9 @@ export const gracefulShutdown = (server) => {
             process.exit(-1);
         }
     }
+}
+
+export const logIP = (req, res, next) => {
+    console.log(req.ip); 
+    next();
 }

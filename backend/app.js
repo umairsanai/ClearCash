@@ -11,24 +11,18 @@ import pocketRouter from "./routes/pocketRouter.js";
 import notificationRouter from "./routes/notificationRouter.js";
 import { errorMiddleware } from "./error.js";
 import pool from "./database.js";
+import { logIP } from "./controllers/helpers.js";
 
 const app = express();
 
-app.use(cors({origin: ['https://clearcash-orpin.vercel.app', 'https://www.clearcash-orpin.vercel.app', "http://127.0.0.1:4173", "http://localhost:4173"], credentials: true}));
-
-// BODY PARSING
-app.set('query parser', 'extended');    
-app.use(express.json({limit: '10kb'}));
-app.use(cookieParser());
-app.use(express.urlencoded({extended: true, limit:'10kb'}));
+// Trust the first proxy (Render's load balancer)
+app.set('trust proxy', 1);
 
 // LOGGING
+app.use(logIP);
 app.use(morgan("tiny"));
 
-// SECURITY
-app.use([xss(), helmet(), hpp({ whitelist: [] })]);
-
-// Rate limiting
+// RATE LIMITING
 app.use(rateLimit({
 	windowMs: 1 * 60 * 1000, // 1 minute
 	limit: 60,
@@ -39,6 +33,17 @@ app.use(rateLimit({
     }
 }));
 
+// CORS
+app.use(cors({origin: ['https://clearcash-orpin.vercel.app', 'https://www.clearcash-orpin.vercel.app', "http://127.0.0.1:4173", "http://localhost:4173"], credentials: true}));
+
+// BODY PARSING
+app.set('query parser', 'extended');    
+app.use(express.json({limit: '10kb'}));
+app.use(cookieParser());
+app.use(express.urlencoded({extended: true, limit:'10kb'}));
+
+// SECURITY
+app.use([xss(), helmet(), hpp({ whitelist: [] })]);
 
 // ROUTERS
 app.use("/api/v1/users", userRouter);
