@@ -21,11 +21,17 @@ export const sendMoney = handleAsyncError(async (req, res, next) => {
 
     let { sender_pocket_id, recipient_user_id, amount } = req.body;
     if (!recipient_user_id || !sender_pocket_id || !amount)
-        return next(new AppError("Insufficient Data: Please provide complete data !", 400));    
+        return next(new AppError("Insufficient Data: Please provide complete data !", 400));
 
     [sender_pocket_id, recipient_user_id, amount] = [sender_pocket_id, recipient_user_id, amount].map(i => +i);
-    
-    if (!Number.isInteger(amount) || !Number.isInteger(recipient_user_id) || !Number.isInteger(sender_pocket_id) || amount <= 0)
+
+    if (!Number.isInteger(recipient_user_id) || recipient_user_id <= 0 || recipient_user_id === req.user.user_id)
+        return next(new AppError("Invalid Recipient!", 400));
+
+    if (!Number.isInteger(sender_pocket_id) || sender_pocket_id <= 0)
+        return next(new AppError("Invalid Pocket to Send from!", 400));
+
+    if (!Number.isInteger(amount) || amount <= 0)
         return next(new AppError("Incorrect Amount!", 400));
 
     // Check if sender has that much money in that pocket.
@@ -72,7 +78,7 @@ export const getWeeklySpendings = handleAsyncError(async (req, res, next) => {
 
 export const findRecipient = handleAsyncError(async (req, res, next) => {
     const search = req.query?.search;
-    const recipients = (await pool.query(`SELECT user_id, name, username, phone FROM users WHERE phone ILIKE '${`%${search}%`}' OR name ILIKE '${`%${search}%`}' OR username ILIKE '${`%${search}%@clearcash`}'`)).rows;
+    const recipients = (await pool.query("SELECT user_id, name, username, phone FROM users WHERE user_id != $1 AND (phone ILIKE $2 OR name ILIKE $2 OR username ILIKE $2)", [req.user.user_id, `%${search}%`])).rows;
     res.status(200).json({
         status: "success",
         data: recipients

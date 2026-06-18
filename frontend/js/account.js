@@ -150,7 +150,7 @@ async function sendMoney() {
         });
         
     } catch (error) {
-        alert("Error: Transaction Failed - Couldn't Send Money!");
+        alert("Error: Transaction Failed - Couldn't Send Money!\nError Details: " + error.message);
     }    
 
     sendMoneyConfirmSendButton.disabled = false; 

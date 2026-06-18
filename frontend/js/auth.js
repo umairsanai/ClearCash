@@ -208,6 +208,9 @@ switchBtn.addEventListener("click", () => {
 authForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    submitBtn.classList.add("is-pressed");
+    setTimeout(() => submitBtn.classList.remove("is-pressed"), 100);
+
     try {
         currentMode === "login" ?
         await validateLogin() : 
