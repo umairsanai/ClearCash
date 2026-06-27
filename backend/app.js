@@ -9,6 +9,7 @@ import helmet from "helmet";
 import userRouter from "./routes/userRouter.js";
 import pocketRouter from "./routes/pocketRouter.js";
 import notificationRouter from "./routes/notificationRouter.js";
+import authRouter from "./routes/authRouter.js"
 import { errorMiddleware } from "./error.js";
 import pool from "./database.js";
 import { logIP } from "./controllers/helpers.js";
@@ -49,7 +50,7 @@ app.use([xss(), helmet(), hpp({ whitelist: [] })]);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/pockets", pocketRouter);
 app.use("/api/v1/notifications", notificationRouter);
-
+app.use("/api/v1/auth", authRouter);
 app.use(errorMiddleware);
 
 export default app;

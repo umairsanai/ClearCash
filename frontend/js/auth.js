@@ -9,6 +9,7 @@ const authSubtitle = document.getElementById("auth-subtitle");
 const authChip = document.getElementById("auth-chip");
 const submitBtn = document.getElementById("submit-btn");
 const formMessage = document.getElementById("form-message");
+const googleLoginButton = document.querySelector(".google-login-btn");
 
 let currentMode = "login";
 
@@ -126,7 +127,7 @@ async function validateLogin() {
     if (!password) 
         throw new Error("Password is required.");
 
-    let response = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
+    let response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -172,7 +173,7 @@ async function validateSignup() {
     else if (validator.isStrongPassword(password)) 
         throw new Error("Password should be at least 6 characters.");
 
-    let res = await fetch(`${import.meta.env.VITE_API_URL}/users/signup`, {
+    let res = await fetch(`${import.meta.env.VITE_API_URL}/auth/signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -226,5 +227,14 @@ authForm.addEventListener("submit", async (event) => {
         setMessage(error.message, "error");
     }
 });
+
+
+googleLoginButton.addEventListener("click", async (event) => {
+    event.preventDefault();
+
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google/login`;
+});
+
+
 
 renderLogin();

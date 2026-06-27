@@ -2,6 +2,8 @@ import { AppError, handleAsyncError } from "../error.js";
 import pool from "../database.js";
 import argon from "argon2";
 import jwt from "jsonwebtoken";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { INT_MAX } from "./helpers.js";
 
 const signJwtToken = (email, username) => {
@@ -119,6 +121,35 @@ export const login = handleAsyncError(async (req, res, next) => {
         }
     });
 });
+
+
+passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.API_URL}/auth/google/verify`
+  },
+  function(accessToken, refreshToken, profile, cb) {
+      return cb(null, {
+        accessToken,
+        refreshToken,
+        profile
+      });
+  }
+));
+
+export const authenticateUserAfterOAuth = handleAsyncError(async (req, res, next) => {
+    const email = req.user.profile.emails[0].value;
+    const user = (await pool.query("SELECT username, email FROM users WHERE email=$1", [email])).rows[0];
+
+    if (!user) 
+        return next(new AppError("You don't have any account with this email!", 404));
+
+    signTokenAndSetInCookie(user.email, user.username, res);
+
+    res.redirect(`${process.env.FRONTEND_URL}/index.html`);
+});
+
+
 
 export const logout = (req, res, next) => {
     res.clearCookie("clearcash-login-token", {

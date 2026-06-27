@@ -13,8 +13,4 @@ router.post("/send", protect, sendMoney);
 router.get("/find", protect, findRecipient);
 router.post("/transfer-to-pocket", protect, transferMoneyToAnotherPocket);
 
-router.post("/signup", signup);
-router.post("/login", login);
-router.post("/logout", protect, logout);
-
 export default router;
