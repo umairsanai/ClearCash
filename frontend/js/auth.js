@@ -90,6 +90,7 @@ function setMessage(message, type) {
 function renderLogin() {
     currentMode = "login";
     authFields.innerHTML = loginFieldsMarkup;
+    googleLoginButton.style.display = "flex";
     authFields.querySelector("#login-username").focus();
     bindPasswordToggle();
 
@@ -105,6 +106,7 @@ function renderLogin() {
 function renderSignup() {
     currentMode = "signup";
     authFields.innerHTML = signupFieldsMarkup;
+    googleLoginButton.style.display = "none";
     authFields.querySelector("#signup-name").focus();
     bindPasswordToggle();
 
