@@ -72,6 +72,9 @@ input {
 
 .logo-icon {
     font-size: 1.5rem;
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
     color: var(--accent);
     background: linear-gradient(135deg, var(--accent), var(--accent-strong));
     -webkit-background-clip: text;
