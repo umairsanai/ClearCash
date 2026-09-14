@@ -1,7 +1,6 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import { xss } from "express-xss-sanitizer";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import hpp from "hpp-clean";
@@ -44,7 +43,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({extended: true, limit:'10kb'}));
 
 // SECURITY
-app.use([xss(), helmet(), hpp({ whitelist: [] })]);
+app.use([helmet(), hpp({ whitelist: [] })]);
 
 // ROUTERS
 app.use("/api/v1/users", userRouter);
