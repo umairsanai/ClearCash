@@ -1,7 +1,7 @@
 import pool from "../database.js";
 import { AppError, handleAsyncError } from "../error.js";
 import { fetchCurrentMonthNotifications } from "./notification.js";
-import { fetchMe, fetchCurrentMonthTransactions } from "./users.js"
+import { fetchMe } from "./users.js"
 
 export const createPocket = handleAsyncError(async (req, res, next) => {
 

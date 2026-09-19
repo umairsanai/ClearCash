@@ -175,13 +175,17 @@ input::-webkit-inner-spin-button {
 }
 
 .greeting-bar {
-    margin-bottom: 2rem;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
     margin-left: 0.5rem;
     margin-right: 0.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-left: 2px solid rgba(0, 180, 219, 0.65);
+    background: linear-gradient(90deg, rgba(30, 41, 59, 0.72), transparent);
+    border-radius: 0 0.9rem 0.9rem 0;
 }
 
 .greeting-bar h2 {
@@ -263,7 +267,13 @@ input::-webkit-inner-spin-button {
     overflow: hidden;
     border: 1px solid rgba(0, 180, 219, 0.38);
     box-shadow: 0 12px 24px rgba(2, 12, 27, 0.28);
-    text-align: center;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr;
+    column-gap: 2rem;
+    align-items: center;
+    padding: 1.35rem 1.75rem;
+    text-align: left;
     z-index: 1;
 }
 
@@ -281,6 +291,18 @@ input::-webkit-inner-spin-button {
     pointer-events: none;
 }
 
+.balance-card::after {
+    content: "";
+    position: absolute;
+    right: 22%;
+    bottom: -8rem;
+    width: 20rem;
+    height: 20rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
 .balance-card p {
     font-size: 0.72rem;
     color: #38c9e8;
@@ -289,28 +311,45 @@ input::-webkit-inner-spin-button {
     letter-spacing: 0.07em;
 }
 
+.balance-card > p {
+    grid-column: 1;
+    grid-row: 1;
+}
+
 .balance-display {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 1rem 0;
-    position: relative;
-    width: 100%;
-    max-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
     display: grid;
     grid-template-columns: 11.5rem 2rem;
-    justify-content: start;
+    grid-column: 1;
+    grid-row: 2;
+    align-items: center;
+    justify-content: flex-start;
     gap: 0.8rem;
+    margin: 0.55rem 0 0;
+    position: relative;
+    width: 100%;
+    max-width: none;
 }
 
 .balance-display h2 {
     font-size: 2.9rem;
     font-weight: 700;
     color: #ffffff;
-    text-align: center;
+    text-align: left;
     width: 13.5rem;
+}
+
+.balance-display h2:not(.skeleton) {
+    font-size: clamp(2.35rem, 5vw, 2.9rem);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    line-height: 1.05;
+}
+
+.balance-display h2.skeleton {
+    width: 11.5rem;
+    height: 3rem;
+    background: rgba(255, 255, 255, 0.2) !important;
+    -webkit-text-fill-color: transparent;
 }
 
 .balance-display button {
@@ -334,10 +373,13 @@ input::-webkit-inner-spin-button {
 }
 
 .balance-actions {
+    grid-column: 2;
+    grid-row: 1 / -1;
     margin-top: 0;
     display: flex;
     gap: 1rem;
     justify-content: center;
+    align-self: center;
 }
 
 .balance-actions button {
@@ -840,18 +882,26 @@ input::-webkit-inner-spin-button {
 .calculator-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
+    gap: 0.7rem;
     flex-grow: 1;
 }
 .calculator-grid button {
     height: 4.5rem; /* ~83px */
-    border-radius: 0.5rem;
+    border-radius: 0.8rem;
     font-size: 1.5rem; /* ~31px */
     font-weight: 500;
     transition: background-color 0.2s;
+    box-shadow: 0 5px 0 rgba(2, 29, 48, 0.35), 0 8px 14px rgba(0, 0, 0, 0.16);
+    transform: translateY(0);
 }
+
+.calculator-grid button:active {
+    transform: translateY(4px);
+    box-shadow: 0 1px 0 rgba(2, 29, 48, 0.35), 0 3px 8px rgba(0, 0, 0, 0.14);
+}
+
 .calculator-grid .btn-num {
-    background: rgba(30, 41, 59, 0.7);
+    background: linear-gradient(145deg, rgba(51, 65, 85, 0.95), rgba(30, 41, 59, 0.9));
     color: #e2e8f0;
     border: 1px solid rgba(0, 180, 219, 0.2);
     transition: all 0.3s ease;
@@ -866,7 +916,7 @@ input::-webkit-inner-spin-button {
     color: #ffffff;
     border: none;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px -2px rgba(0, 180, 219, 0.3);
+    box-shadow: 0 5px 0 rgba(0, 93, 124, 0.7), 0 9px 16px rgba(0, 180, 219, 0.2);
 }
 .calculator-grid .btn-op:hover {
     filter: brightness(1.1);
@@ -874,7 +924,7 @@ input::-webkit-inner-spin-button {
     box-shadow: 0 4px 12px -2px rgba(0, 180, 219, 0.4);
 }
 .calculator-grid .btn-util {
-    background: rgba(71, 85, 105, 0.7);
+    background: rgba(71, 85, 105, 0.9);
     color: #e2e8f0;
     border: 1px solid rgba(148, 163, 184, 0.2);
     transition: all 0.3s ease;
@@ -1287,6 +1337,7 @@ input::-webkit-inner-spin-button {
     font-size: 1rem;
     background: rgba(15, 23, 42, 0.6);
     color: #e2e8f0;
+    color-scheme: dark;
     transition: all 0.3s ease;
 }
 .form-input:focus {
@@ -1299,10 +1350,6 @@ input::-webkit-inner-spin-button {
 .form-input option {
     background: #1e293b;
     color: #e2e8f0;
-}
-
-.form-input {
-    color-scheme: dark;
 }
 
 /* Handle Webkit autofill */
@@ -1730,20 +1777,54 @@ input::-webkit-inner-spin-button {
     }
 
     .balance-display {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.75rem;
+        grid-column: 1;
+        grid-row: 2;
+        display: block;
+        width: 100%;
+        max-width: none;
+        position: static;
+        margin-top: 0.25rem;
     }
 
     .balance-display h2 {
         font-size: 2.8rem;
         min-width: 0;
         text-align: center;
+        width: auto;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .balance-display h2.skeleton {
+        width: 14rem;
+    }
+
+    .balance-display button {
+        position: absolute;
+        top: 0.6rem;
+        right: 0.6rem;
     }
 
     .balance-actions {
+        grid-column: 1;
+        grid-row: 3;
         flex-direction: column;
         gap: 0.75rem;
+        justify-self: stretch;
+        margin-top: 1.25rem;
+    }
+
+    .balance-card {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 0.5rem;
+        padding: 1.25rem;
+    }
+
+    .balance-card > p {
+        grid-column: 1;
+        grid-row: 1;
+        text-align: center;
     }
 
     .balance-actions button {
@@ -1877,7 +1958,7 @@ input::-webkit-inner-spin-button {
     }
 
     .calculator-grid {
-        gap: 0.4rem;
+        gap: 0.7rem;
     }
 
     .calculator-grid button {
@@ -1897,7 +1978,7 @@ input::-webkit-inner-spin-button {
     }
 }
 
-/* --- Refined dashboard states and requested card polish --- */
+/* --- 14. Loading Skeletons --- */
 .skeleton {
     display: block;
     position: relative;
@@ -2005,158 +2086,7 @@ input::-webkit-inner-spin-button {
     justify-self: end;
 }
 
-.greeting-bar {
-    padding: 0.85rem 1rem;
-    margin-top: 0.25rem;
-    margin-bottom: 1rem;
-    border-left: 2px solid rgba(0, 180, 219, 0.65);
-    background: linear-gradient(90deg, rgba(30, 41, 59, 0.72), transparent);
-    border-radius: 0 0.9rem 0.9rem 0;
-}
-
-.balance-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto 1fr;
-    column-gap: 2rem;
-    align-items: center;
-    padding: 1.35rem 1.75rem;
-    text-align: left;
-}
-
-.balance-card > p {
-    grid-column: 1;
-    grid-row: 1;
-}
-
-.balance-display {
-    grid-column: 1;
-    grid-row: 2;
-    justify-content: flex-start;
-    margin: 0.55rem 0 0;
-    max-width: none;
-}
-
-.balance-display h2 {
-    text-align: left;
-}
-
-.balance-display h2:not(.skeleton) {
-    font-size: clamp(2.35rem, 5vw, 2.9rem);
-    font-weight: 700;
-    letter-spacing: -0.022em;
-    line-height: 1.05;
-}
-
-.balance-display h2.skeleton {
-    width: 11.5rem;
-    height: 3rem;
-    background: rgba(255, 255, 255, 0.2) !important;
-    -webkit-text-fill-color: transparent;
-}
-
 .greeting-bar h2.skeleton {
     background: rgba(255, 255, 255, 0.18) !important;
     -webkit-text-fill-color: transparent;
-}
-
-.balance-display {
-    gap: 0.8rem;
-}
-
-.balance-actions {
-    grid-column: 2;
-    grid-row: 1 / -1;
-    margin-top: 0;
-    align-self: center;
-}
-
-.balance-card::after {
-    content: "";
-    position: absolute;
-    right: 22%;
-    bottom: -8rem;
-    width: 20rem;
-    height: 20rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.calculator-grid {
-    gap: 0.7rem;
-}
-
-.calculator-grid button {
-    border-radius: 0.8rem;
-    box-shadow: 0 5px 0 rgba(2, 29, 48, 0.35), 0 8px 14px rgba(0, 0, 0, 0.16);
-    transform: translateY(0);
-}
-
-.calculator-grid button:active {
-    transform: translateY(4px);
-    box-shadow: 0 1px 0 rgba(2, 29, 48, 0.35), 0 3px 8px rgba(0, 0, 0, 0.14);
-}
-
-.calculator-grid .btn-num {
-    background: linear-gradient(145deg, rgba(51, 65, 85, 0.95), rgba(30, 41, 59, 0.9));
-}
-
-.calculator-grid .btn-op {
-    box-shadow: 0 5px 0 rgba(0, 93, 124, 0.7), 0 9px 16px rgba(0, 180, 219, 0.2);
-}
-
-.calculator-grid .btn-util {
-    background: rgba(71, 85, 105, 0.9);
-}
-
-@media (max-width: 768px) {
-    .balance-card {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        row-gap: 0.5rem;
-        padding: 1.25rem;
-    }
-
-    .balance-card > p,
-    .balance-display,
-    .balance-actions {
-        grid-column: 1;
-    }
-
-    .balance-card > p {
-        grid-row: 1;
-        text-align: center;
-    }
-    .balance-display {
-        grid-row: 2;
-        display: block;
-        width: 100%;
-        max-width: none;
-        position: static;
-    }
-    .balance-display h2 {
-        width: auto;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .balance-display button {
-        position: absolute;
-        top: 0.6rem;
-        right: 0.6rem;
-    }
-    .balance-actions {
-        grid-row: 3;
-        justify-self: stretch;
-        margin-top: 1.25rem;
-    }
-
-    .balance-display {
-        margin-top: 0.25rem;
-    }
-
-    .balance-display h2 {
-        text-align: center;
-    }
-    .balance-display h2.skeleton { width: 14rem; }
 }
