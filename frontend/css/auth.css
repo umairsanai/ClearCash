@@ -151,9 +151,8 @@ input {
 }
 
 .auth-fields {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    display: grid;    
+    margin-bottom: 0.5rem;
 }
 
 .form-group {

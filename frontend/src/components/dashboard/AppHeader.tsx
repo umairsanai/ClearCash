@@ -1,5 +1,6 @@
 import { isUnread } from "../../api";
 import { useUser } from "../../context";
+import logoUrl from "../../../assets/logo.png";
 
 interface AppHeaderProps {
   onNotifications: () => void;
@@ -14,7 +15,7 @@ export function AppHeader({ onNotifications, onLogout }: AppHeaderProps) {
     <header className="header">
       <nav className="header-nav">
         <div className="header-logo">
-          <img src="/assets/logo.png" alt="ClearCash logo" />
+          <img src={logoUrl} alt="ClearCash logo" />
           <h1 id="app-name">
             <span className="brand-clear">Clear</span>
             <span className="brand-cash">Cash</span>

@@ -3,6 +3,7 @@ import validator from "validator";
 import { api } from "../api";
 import { useUser } from "../context";
 import { navigate } from "../router";
+import logoUrl from "../../assets/logo.png";
 
 type AuthMode = "login" | "signup";
 
@@ -127,7 +128,7 @@ export function AuthPage() {
           <div className="header-logo">
             <img
               className="logo-icon"
-              src="/assets/logo.png"
+              src={logoUrl}
               alt="ClearCash logo"
             />
             <h1 id="app-name">ClearCash</h1>
