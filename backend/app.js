@@ -10,7 +10,7 @@ import pocketRouter from "./routes/pocketRouter.js";
 import notificationRouter from "./routes/notificationRouter.js";
 import authRouter from "./routes/authRouter.js"
 import { errorMiddleware } from "./error.js";
-import { unhandledRequestHandler } from "./controllers/helpers.js";
+import { getHealth, unhandledRequestHandler } from "./controllers/helpers.js";
 
 const app = express();
 
@@ -44,6 +44,7 @@ app.use(express.urlencoded({extended: true, limit:'10kb'}));
 app.use([helmet(), hpp({ whitelist: [] })]);
 
 // ROUTERS
+app.use("/api/v1/health", getHealth);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/pockets", pocketRouter);
 app.use("/api/v1/notifications", notificationRouter);
