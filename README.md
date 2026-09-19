@@ -1,6 +1,6 @@
 # 💳 ClearCash: An E-Wallet Web App
 
-**ClearCash** is a simple yet feature-packed **e-wallet web app** built completely from scratch using **HTML, CSS, and JavaScript, Express, & Node.js**, connected with **PostgreSQL** database.  
+**ClearCash** is a simple yet feature-packed **e-wallet web app** built from scratch with **React and TypeScript** on the frontend, **Express and Node.js** on the backend, and a **PostgreSQL** database.  
 
 Inspired by modern digital banking apps like **NayaPay** and **SadaPay**, ClearCash helps you **organize your money** by creating virtual **“Pockets”**, separate mini-wallets for different spending categories. This makes budgeting easier and keeps your finances neatly divided.
 
@@ -21,7 +21,7 @@ The app includes four simple pop-up modals that handle everything:
 4. **Send Money** – a two-step process that lets you:
    - Pick the pocket you want to send from.
    - Enter the amount using a built-in **dialpad**.
-5. **View Transactios** – check all transactions of the current month 
+5. **View Transactions** – check all transactions of the current month.
 6. **Check Notifications** – check, read, and delete notifications
 
 ### 📊 Smart Dashboard
@@ -36,8 +36,7 @@ The app includes four simple pop-up modals that handle everything:
 
 | Feature | Technology |
 |----------|-------------|
-| Structure & Styling | HTML5, CSS3 |
-| App Logic & Interactivity | JavaScript (ES6+) |
+| Frontend | React, TypeScript |
 | Backend API | Express, Node.js |
 | Database | PostgreSQL |
 | Extras | Calculator |
