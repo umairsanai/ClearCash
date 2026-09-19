@@ -1,8 +1,5 @@
-import dotenv from "dotenv";
-import { Pool, Client } from 'pg'
-
-dotenv.config({path: ".env"});
-
+import "dotenv/config";
+import { Pool } from 'pg'
 
 // LOCAL DATABASE
 

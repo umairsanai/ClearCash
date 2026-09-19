@@ -6,6 +6,8 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { INT_MAX } from "./helpers.js";
 
+const INITIAL_POCKET_BALANCE = 50_000;
+
 const signJwtToken = (email, username) => {
     return jwt.sign({ email, username }, process.env.JWT_SIGN_SECRET, {
         expiresIn: "7 days"
@@ -72,7 +74,7 @@ export const signup = handleAsyncError(async (req, res, next) => {
     const user_id = (await pool.query("INSERT INTO users (name, email, username, phone, password) VALUES ($1, $2, $3, $4, $5) RETURNING user_id", [name, email, username, phone, password])).rows[0].user_id;
     let pocket;
     try {
-        pocket = (await pool.query("INSERT INTO pockets (user_id, pocket_name, pocket_limit, color) VALUES ($1, 'Main', $2, 'RED') RETURNING pocket_id, pocket_name, pocket_balance, color", [user_id, INT_MAX])).rows[0];
+        pocket = (await pool.query("INSERT INTO pockets (user_id, pocket_name, pocket_balance, pocket_limit, color) VALUES ($1, 'Main', $2, $3, 'RED') RETURNING pocket_id, pocket_name, pocket_balance, color", [user_id, INITIAL_POCKET_BALANCE, INT_MAX])).rows[0];
     } catch (err) {
         (await pool.query("DELETE FROM users WHERE user_id=$1", [user_id]));        
         throw err;

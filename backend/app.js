@@ -10,8 +10,7 @@ import pocketRouter from "./routes/pocketRouter.js";
 import notificationRouter from "./routes/notificationRouter.js";
 import authRouter from "./routes/authRouter.js"
 import { errorMiddleware } from "./error.js";
-import pool from "./database.js";
-import { logIP } from "./controllers/helpers.js";
+import { unhandledRequestHandler } from "./controllers/helpers.js";
 
 const app = express();
 
@@ -19,7 +18,6 @@ const app = express();
 app.set('trust proxy', 1);
 
 // LOGGING
-app.use(logIP);
 app.use(morgan("tiny"));
 
 // RATE LIMITING
@@ -50,6 +48,8 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/pockets", pocketRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/auth", authRouter);
+
 app.use(errorMiddleware);
+app.use(unhandledRequestHandler);
 
 export default app;

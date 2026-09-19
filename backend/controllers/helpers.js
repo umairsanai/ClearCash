@@ -15,17 +15,14 @@ export function formatDate(date) {
     }).format(date);
 }
 
-export const initialize = () => {
-    process.env.MODE = process.env.MODE.trim();
-}
-
 export const formatColumnName = (name) => name.replaceAll(" ", "_").toLowerCase();
 
 export const gracefulShutdown = (server) => {
     return async () => {
         try {
             server.close();
-            await pool.end();
+            if (!pool.ended && !pool.ending)
+                await pool.end();
             console.log("Gracefully shutting down....");        
         } catch (err) {
             console.log("Ungracefully shutting down....");
@@ -34,7 +31,9 @@ export const gracefulShutdown = (server) => {
     }
 }
 
-export const logIP = (req, res, next) => {
-    console.log(req.ip); 
-    next();
+export const unhandledRequestHandler = (req, res, next) => {
+    res.status(400).json({
+        status: "fail",
+        message: "No such route exists!"
+    });
 }
