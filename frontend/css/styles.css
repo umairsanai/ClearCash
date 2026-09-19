@@ -1,0 +1,39 @@
+body.dashboard-page {
+  display: block;
+  min-height: 0;
+}
+
+body.auth-page {
+  overflow: auto;
+}
+
+.auth-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-shell .ghost-link {
+  cursor: pointer;
+  font: inherit;
+}
+
+.modal-body .form-message {
+  margin-top: 0.75rem;
+}
+
+.modal-body .form-actions button:disabled,
+.confirm-send-btn:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.notification-badge {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .auth-shell .header-nav {
+    flex-direction: row;
+  }
+}

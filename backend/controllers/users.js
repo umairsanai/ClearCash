@@ -139,10 +139,12 @@ export async function fetchMe(user) {
         username: user.username,
         total_balance: 0
     };
-    me.pockets = await fetchAllPockets(user.user_id);
+    [me.pockets, me.transactions, me.notifications, me.spendings] = await Promise.all([
+        fetchAllPockets(user.user_id),
+        fetchCurrentMonthTransactions(user.user_id),
+        fetchCurrentMonthNotifications(user.user_id),
+        fetchSpendings(user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()))
+    ]);
     me.total_balance = me.pockets.reduce((sum, pocket) => sum + pocket.pocket_balance, 0);
-    me.spendings = await fetchSpendings(user.user_id, formatDate(new Date(Date.now()- 6*MILLISECONDS_IN_A_DAY)), formatDate(new Date()));
-    me.transactions = await fetchCurrentMonthTransactions(user.user_id);
-    me.notifications = await fetchCurrentMonthNotifications(user.user_id);
     return me;
 }

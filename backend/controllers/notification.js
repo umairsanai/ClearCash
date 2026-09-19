@@ -3,7 +3,8 @@ import { AppError, handleAsyncError } from "../error.js";
 import { isInteger } from "./helpers.js";
 
 export const markAllNotificationsRead = handleAsyncError(async (req, res, next) => {
-    const newNotifications = (await pool.query("UPDATE notifications SET is_read = 1 WHERE user_id = $1 RETURNING notification_id, message, is_read, created_at", [req.user.user_id])).rows;
+    (await pool.query("UPDATE notifications SET is_read = 1 WHERE user_id = $1", [req.user.user_id])).rows;
+    const newNotifications = await fetchCurrentMonthNotifications(req.user.user_id);
 
     res.status(200).json({
         status: "success",
