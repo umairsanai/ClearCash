@@ -1,5 +1,4 @@
 import express from "express";
-import { AppError, handleAsyncError } from "../error.js";
 import {markAllNotificationsRead, deleteNotification, getCurrentMonthNotifications} from "../controllers/notification.js";
 import { protect } from "../controllers/auth.js";
 

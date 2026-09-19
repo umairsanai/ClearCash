@@ -1,6 +1,5 @@
 import express from "express";
-import { login, logout, protect, signup } from "../controllers/auth.js";
-import { AppError } from "../error.js";
+import { protect } from "../controllers/auth.js";
 import { getMe, getWeeklySpendings, sendMoney, transferMoneyToAnotherPocket, findRecipient } from "../controllers/users.js";
 
 const router = express.Router();
