@@ -7,6 +7,7 @@
     <script defer type="module" src="js/index.js"></script>
     <link rel="icon" type="image/png" href="assets/title-logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/product-sans">
     <link rel="stylesheet" href="css/index.css">
 
 </head>
@@ -17,15 +18,12 @@
         <nav class="header-nav">
             <div class="header-logo">
                 <img class src="assets/logo.png" alt="SpendWise Logo">
-                <h1 id="app-name">ClearCash</h1>
+                <h1 id="app-name"><span class="brand-clear">Clear</span><span class="brand-cash">Cash</span></h1>
             </div>
             <div class="header-actions">
                 <button id="notifications-btn" aria-label="Notifications">
                     <i class="fas fa-bell"></i>
                     <span id="notifications-badge" class="notification-badge hidden" aria-hidden="true"></span>
-                </button>
-                <button id="profile-btn" aria-label="Profile">
-                    <i class="fas fa-user-circle"></i>
                 </button>
                 <button id="logout-btn" aria-label="Log Out">
                     <i class="fa fa-sign-out" aria-hidden="true"></i>
@@ -42,7 +40,7 @@
             <div class="main-content">
                 
                 <div class="greeting-bar">
-                    <h2 id="user-greeting">Fetching....</h2>
+                    <h2 id="user-greeting" class="skeleton skeleton-heading" aria-label="Loading"></h2>
                     <button id="calculator-toggle-btn" aria-label="Open Calculator">
                         <i class="fas fa-calculator"></i>
                     </button>
@@ -54,7 +52,7 @@
                     <div class="card card-col-span-3 balance-card">
                         <p>Total Balance</p>
                         <div class="balance-display">
-                            <h2 id="total-balance">********</h2>
+                            <h2 id="total-balance" class="skeleton skeleton-balance" aria-label="Loading"></h2>
                             <button id="toggle-balance-btn" aria-label="Toggle balance visibility">
                                 <i class="fas fa-eye" id="balance-eye-icon"></i>
                             </button>
@@ -71,7 +69,10 @@
                     <div class="card card-col-span-3 card-hover">
                         <h3 class="card-title">My Pockets</h3>
                         <div class="pocket-grid" id="pocket-grid-container">
-                            <!-- Pockets will be dynamically inserted here by script.js -->
+                            <div class="pocket-card skeleton-card" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-short"></span><span class="skeleton skeleton-line skeleton-line-value"></span><span class="skeleton skeleton-line"></span></div>
+                            <div class="pocket-card skeleton-card" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-short"></span><span class="skeleton skeleton-line skeleton-line-value"></span><span class="skeleton skeleton-line"></span></div>
+                            <div class="pocket-card skeleton-card" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-short"></span><span class="skeleton skeleton-line skeleton-line-value"></span><span class="skeleton skeleton-line"></span></div>
+                            <div class="pocket-card skeleton-card" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-short"></span><span class="skeleton skeleton-line skeleton-line-value"></span><span class="skeleton skeleton-line"></span></div>
                         </div>
                         <button id="add-pocket-btn" class="add-pocket-btn">
                             <i class="fas fa-plus"></i> Add New Pocket
@@ -94,25 +95,9 @@
                         </div>
                         
                         <div class="spending-list" id="spending-list-container">
-                            <!-- Example spending items (can be cleared by JS) -->
-                            <div>
-                                <div class="spending-item-header">
-                                    <span class="spending-item-category"><i class="fas fa-utensils"></i>Food</span>
-                                    <span class="spending-item-amount">Rs 3,500</span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" style="width: 45%; background-color: #22c55e;"></div>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="spending-item-header">
-                                    <span class="spending-item-category"><i class="fas fa-tshirt"></i>Laundry</span>
-                                    <span class="spending-item-amount">Rs 700</span>
-                                </div>
-                                <div class="progress-bar-container">
-                                    <div class="progress-bar" style="width: 9%; background-color: #eab308;"></div>
-                                </div>
-                            </div>
+                            <div class="skeleton-spending" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line"></span></div>
+                            <div class="skeleton-spending" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line"></span></div>
+                            <div class="skeleton-spending" aria-hidden="true"><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line"></span></div>
                         </div>
                     </div>
 
@@ -120,21 +105,10 @@
                     <div class="transactions card card-col-span-3 card-hover">
                         <h3 class="card-title">Recent Transactions</h3>
                         <div class="transaction-list" id="transaction-list-container">
-                            
-                            <!-- Transactions will be dynamically inserted here by script.js -->
-                            <!-- <div class="transaction-item">
-                                <div class="transaction-details">
-                                    <div class="transaction-icon icon-food">
-                                        <i class="fas fa-money-bill-wave"></i>
-                                    </div>
-                                    <div class="transaction-info">
-                                        <p class="title">Foodpanda Order</p>
-                                        <p class="subtitle">Food Pocket • Dec 9</p>
-                                    </div>
-                                </div>
-                                <p class="transaction-amount amount-debit">- Rs 850.00</p>
-                            </div> -->
-
+                            <div class="transaction-item skeleton-transaction" aria-hidden="true"><span class="skeleton skeleton-avatar"></span><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line skeleton-line-amount"></span></div>
+                            <div class="transaction-item skeleton-transaction" aria-hidden="true"><span class="skeleton skeleton-avatar"></span><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line skeleton-line-amount"></span></div>
+                            <div class="transaction-item skeleton-transaction" aria-hidden="true"><span class="skeleton skeleton-avatar"></span><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line skeleton-line-amount"></span></div>
+                            <div class="transaction-item skeleton-transaction" aria-hidden="true"><span class="skeleton skeleton-avatar"></span><span class="skeleton skeleton-line skeleton-line-medium"></span><span class="skeleton skeleton-line skeleton-line-amount"></span></div>
                         </div>
                         <button id="view-all-btn" data-state="view" class="view-all-btn">
                             View All Transactions
@@ -484,4 +458,3 @@
     -->
 </body>
 </html>
-

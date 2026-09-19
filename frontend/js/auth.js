@@ -22,12 +22,12 @@ let currentMode = "login";
 
 
 
-function passwordFieldMarkup(id, name, placeholder) {
+function passwordFieldMarkup(id, name, placeholder, autocomplete) {
     return `
     <div class="form-group">
         <label for="${id}">Password</label>
         <div class="password-field">
-            <input id="${id}" name="${name}" type="password" placeholder="${placeholder}" required>
+            <input id="${id}" name="${name}" type="password" autocomplete="${autocomplete}" placeholder="${placeholder}" required>
             <button type="button" class="password-toggle" data-password-toggle >
                 <i class="fas fa-eye"></i>
             </button>
@@ -54,7 +54,7 @@ const loginFieldsMarkup = `
         <label for="login-username">Username</label>
         <input id="login-username" name="username" type="text" autocomplete="username" placeholder="Username" required>
     </div>
-    ${passwordFieldMarkup("login-password", "password", "Enter your password")}
+    ${passwordFieldMarkup("login-password", "password", "Enter your password", "current-password")}
 `;
 
 const signupFieldsMarkup = `
@@ -68,13 +68,13 @@ const signupFieldsMarkup = `
     </div>
     <div class="form-group">
         <label for="signup-username">Username</label>
-        <input id="signup-username" name="username" type="text" autocomplete="username" placeholder="janedoe" required>
+        <input id="signup-username" name="username" type="text" autocomplete="off" placeholder="janedoe" required>
     </div>
     <div class="form-group">
         <label for="signup-phone">Phone number</label>
         <input id="signup-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0300 1234567" required>
     </div>
-    ${passwordFieldMarkup("signup-password", "password", "Create a password")}
+    ${passwordFieldMarkup("signup-password", "password", "Create a password", "new-password")}
 `;
 
 function setMessage(message, type) {
@@ -87,6 +87,14 @@ function setMessage(message, type) {
     formMessage.className = `form-message ${type === "success" ? "is-success" : "is-error"}`;
 }
 
+function setSubmitState(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtn.classList.toggle("is-loading", isLoading);
+    submitBtn.querySelector(".btn-label").textContent = isLoading
+        ? (currentMode === "login" ? "Signing in..." : "Creating account...")
+        : (currentMode === "login" ? "Login" : "Sign up");
+}
+
 function renderLogin() {
     currentMode = "login";
     authFields.innerHTML = loginFieldsMarkup;
@@ -97,7 +105,7 @@ function renderLogin() {
     authTitle.textContent = "Login";
     authSubtitle.textContent = "Use your ClearCash username and password.";
     authChip.textContent = "Welcome back";
-    submitBtn.textContent = "Login";
+    setSubmitState(false);
     switchHint.textContent = "New here?";
     switchBtn.textContent = "Create an account";
     setMessage("");
@@ -113,7 +121,7 @@ function renderSignup() {
     authTitle.textContent = "Create account";
     authSubtitle.textContent = "Set up your ClearCash account in minutes.";
     authChip.textContent = "Start now";
-    submitBtn.textContent = "Sign up";
+    setSubmitState(false);
     switchHint.textContent = "Already have an account?";
     switchBtn.textContent = "Back to login";
     setMessage("");
@@ -213,6 +221,8 @@ authForm.addEventListener("submit", async (event) => {
 
     submitBtn.classList.add("is-pressed");
     setTimeout(() => submitBtn.classList.remove("is-pressed"), 100);
+    setMessage("");
+    setSubmitState(true);
 
     try {
         currentMode === "login" ?
@@ -226,7 +236,12 @@ authForm.addEventListener("submit", async (event) => {
         }, 500);
 
     } catch (error) {
-        setMessage(error.message, "error");
+        const message = error instanceof Error && error.message
+            ? error.message
+            : "We couldn't complete that request. Please try again.";
+        setMessage(message, "error");
+    } finally {
+        setSubmitState(false);
     }
 });
 

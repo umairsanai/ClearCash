@@ -18,7 +18,7 @@
 }
 
 html {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: "Product Sans", "Google Sans", Arial, sans-serif;
     line-height: 1.5;
 }
 
@@ -176,6 +176,8 @@ input {
     border: 1px solid rgba(148, 163, 184, 0.25);
     background: var(--bg-input);
     color: var(--text-main);
+    -webkit-text-fill-color: var(--text-main);
+    color-scheme: dark;
     transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -187,6 +189,36 @@ input:focus {
     outline: none;
     border-color: rgba(0, 180, 219, 0.6);
     box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.15);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text-main) !important;
+    color: var(--text-main) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset;
+    box-shadow: 0 0 0 1000px var(--bg-input) inset;
+    caret-color: var(--text-main);
+    transition: background-color 9999s ease-in-out 0s;
+}
+
+input:autofill {
+    color: var(--text-main) !important;
+    -webkit-text-fill-color: var(--text-main) !important;
+    background-color: var(--bg-input);
+    box-shadow: 0 0 0 1000px var(--bg-input) inset;
+    caret-color: var(--text-main);
+}
+
+#login-username,
+#login-username:-webkit-autofill,
+#login-username:-webkit-autofill:hover,
+#login-username:-webkit-autofill:focus,
+#login-username:-webkit-autofill:active {
+    color: var(--text-main) !important;
+    -webkit-text-fill-color: var(--text-main) !important;
+    caret-color: var(--text-main);
 }
 
 .password-field input {
@@ -236,14 +268,50 @@ input:focus {
     box-shadow: 0 6px 12px rgba(0, 180, 219, 0.2);
 }
 
+.primary-btn:disabled {
+    cursor: wait;
+    opacity: 0.82;
+    transform: none;
+}
+
+.primary-btn.is-loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+}
+
+.btn-spinner {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: button-spin 0.7s linear infinite;
+}
+
+.primary-btn.is-loading .btn-spinner {
+    display: inline-block;
+}
+
+@keyframes button-spin {
+    to { transform: rotate(360deg); }
+}
+
 .switch-text {
-    margin-top: 1rem;
+    margin-top: -0.6rem;
     display: flex;
     gap: 0.35rem;
     justify-content: center;
     align-items: center;
     color: var(--text-muted);
     font-size: 0.95rem;
+}
+
+.form-message.is-error + .switch-text,
+.form-message.is-success + .switch-text {
+    margin-top: 0.9rem;
 }
 
 .link-btn {
@@ -256,18 +324,29 @@ input:focus {
 }
 
 .form-message {
-    margin-top: 0.9rem;
+    margin: 1rem 0 0;
+    padding: 0;
     font-size: 0.9rem;
     text-align: center;
     min-height: 1.25rem;
+    font-weight: 600;
+    transition: padding 0.2s ease, background 0.2s ease;
 }
 
 .form-message.is-error {
     color: var(--danger);
+    padding: 0.75rem 0.9rem;
+    border-left: 3px solid var(--danger);
+    border-radius: 0.6rem;
+    background: rgba(248, 113, 113, 0.1);
 }
 
 .form-message.is-success {
     color: var(--success);
+    padding: 0.75rem 0.9rem;
+    border-left: 3px solid var(--success);
+    border-radius: 0.6rem;
+    background: rgba(52, 211, 153, 0.1);
 }
 
 

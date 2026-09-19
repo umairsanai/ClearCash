@@ -18,10 +18,12 @@ let balanceVisible = true;
 export function showBalance(toggle = false) {
     if (toggle)
         balanceVisible = !balanceVisible;
+    balanceElement.classList.remove("skeleton", "skeleton-balance");
     balanceElement.textContent = balanceVisible ? `Rs ${format(window.user.total_balance)}` : `********`;
 }
 
 export function greet() {
+    greetingHeadingElement.classList.remove("skeleton", "skeleton-heading");
     greetingHeadingElement.textContent = `Welcome, ${window.user.name}!`;
 }
 
